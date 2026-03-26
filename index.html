@@ -1,27 +1,33 @@
+
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Ecommerce</title>
+  <title>MyShop</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-<!-- Navbar -->
-<div class="navbar">
-  <h2>MyShop</h2>
-  <input type="text" placeholder="Search products...">
-</div>
+<!-- NAVBAR -->
+<header class="navbar">
+  <div class="logo">🛒 MyShop</div>
+  <input type="text" id="search" placeholder="Search for products...">
+  <div class="nav-icons">
+    <span>👤</span>
+    <span>🛍️</span>
+  </div>
+</header>
 
-<!-- Categories -->
-<div class="categories">
-  <button>All</button>
-  <button>Electronics</button>
-  <button>Fashion</button>
-  <button>Home</button>
-</div>
+<!-- HERO -->
+<section class="hero">
+  <h1>Big Deals. Big Savings.</h1>
+  <p>Discover amazing products at the best prices</p>
+</section>
 
-<!-- Products -->
-<div id="products" class="products"></div>
+<!-- PRODUCTS -->
+<section>
+  <h2 class="section-title">Trending Products</h2>
+  <div id="products" class="products"></div>
+</section>
 
 <script src="app.js"></script>
 </body>
