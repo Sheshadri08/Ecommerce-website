@@ -26,3 +26,11 @@ app.delete("/product/:id", async (req, res) => {
     await Product.findByIdAndDelete(req.params.id);
     res.send("Deleted");
 });
+<button onclick="deleteProduct('${p._id}')">Delete</button>
+async function deleteProduct(id) {
+    await fetch("http://localhost:5000/product/" + id, {
+        method: "DELETE"
+    });
+    alert("Deleted");
+    location.reload();
+}
