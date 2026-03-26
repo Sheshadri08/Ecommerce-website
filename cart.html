@@ -2,35 +2,100 @@
 <html>
 <head>
     <title>Cart</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-<h2>Your Cart 🛒</h2>
-<div id="cart"></div>
-<h3 id="total"></h3>
+<h2 style="text-align:center;">🛒 Your Cart</h2>
 
-<button onclick="checkout()">Pay Now 💳</button>
+<div id="cart"></div>
+
+<h2 id="total" style="text-align:center;"></h2>
+
+<div style="text-align:center;">
+    <button onclick="checkout()">Pay Now 💳</button>
+</div>
 
 <script>
 let cart = JSON.parse(localStorage.getItem("cart")) || [];
-const container = document.getElementById("cart");
 
-let total = 0;
+// 🧠 Convert to quantity system
+let cartMap = {};
 
 cart.forEach(item => {
-    total += Number(item.price);
-    container.innerHTML += `
-        <div>
-            <h3>${item.name}</h3>
-            <p>₹${item.price}</p>
-        </div>
-    `;
+    if (cartMap[item.name]) {
+        cartMap[item.name].qty += 1;
+    } else {
+        cartMap[item.name] = { ...item, qty: 1 };
+    }
 });
 
-document.getElementById("total").innerText = "Total: ₹" + total;
+let cartItems = Object.values(cartMap);
 
-// 🔥 PAYMENT
+function renderCart() {
+    const container = document.getElementById("cart");
+    container.innerHTML = "";
+    let total = 0;
+
+    cartItems.forEach((item, index) => {
+        total += item.price * item.qty;
+
+        container.innerHTML += `
+        <div class="cart-card">
+            <img src="${item.image}" width="100">
+            <div>
+                <h3>${item.name}</h3>
+                <p>₹${item.price}</p>
+
+                <button onclick="decrease(${index})">➖</button>
+                ${item.qty}
+                <button onclick="increase(${index})">➕</button>
+
+                <br><br>
+                <button onclick="removeItem(${index})">Remove ❌</button>
+            </div>
+        </div>
+        `;
+    });
+
+    document.getElementById("total").innerText = "Total: ₹" + total;
+}
+
+function increase(index) {
+    cartItems[index].qty++;
+    updateStorage();
+}
+
+function decrease(index) {
+    if (cartItems[index].qty > 1) {
+        cartItems[index].qty--;
+    }
+    updateStorage();
+}
+
+function removeItem(index) {
+    cartItems.splice(index, 1);
+    updateStorage();
+}
+
+function updateStorage() {
+    let newCart = [];
+
+    cartItems.forEach(item => {
+        for (let i = 0; i < item.qty; i++) {
+            newCart.push(item);
+        }
+    });
+
+    localStorage.setItem("cart", JSON.stringify(newCart));
+    location.reload();
+}
+
+// 💳 PAYMENT
 function checkout() {
+    let total = 0;
+    cartItems.forEach(item => total += item.price * item.qty);
+
     fetch("http://localhost:5000/create-order", {
         method: "POST",
         headers: {"Content-Type": "application/json"},
@@ -54,6 +119,8 @@ function checkout() {
         rzp.open();
     });
 }
+
+renderCart();
 </script>
 
 <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
