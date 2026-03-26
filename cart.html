@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Cart</title>
+</head>
+<body>
+
+<h2>Your Cart 🛒</h2>
+<div id="cart"></div>
+<h3 id="total"></h3>
+
+<button onclick="checkout()">Pay Now 💳</button>
+
+<script>
+let cart = JSON.parse(localStorage.getItem("cart")) || [];
+const container = document.getElementById("cart");
+
+let total = 0;
+
+cart.forEach(item => {
+    total += Number(item.price);
+    container.innerHTML += `
+        <div>
+            <h3>${item.name}</h3>
+            <p>₹${item.price}</p>
+        </div>
+    `;
+});
+
+document.getElementById("total").innerText = "Total: ₹" + total;
+
+// 🔥 PAYMENT
+function checkout() {
+    fetch("http://localhost:5000/create-order", {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({ amount: total })
+    })
+    .then(res => res.json())
+    .then(data => {
+        const options = {
+            key: "YOUR_RAZORPAY_KEY",
+            amount: data.amount,
+            currency: "INR",
+            name: "MyShop",
+            order_id: data.id,
+            handler: function () {
+                alert("Payment Successful 🎉");
+                localStorage.removeItem("cart");
+                window.location.href = "index.html";
+            }
+        };
+        const rzp = new Razorpay(options);
+        rzp.open();
+    });
+}
+</script>
+
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+
+</body>
+</html>
