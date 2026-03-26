@@ -22,3 +22,7 @@ mongoose.connect(process.env.MONGO_URI)
 app.listen(5000, () => {
   console.log("Server running on port 5000");
 });
+app.delete("/product/:id", async (req, res) => {
+    await Product.findByIdAndDelete(req.params.id);
+    res.send("Deleted");
+});
