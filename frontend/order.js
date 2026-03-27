@@ -1,4 +1,4 @@
-﻿const state = {
+const state = {
   products: [],
   categories: [],
   activeCategory: "All",
@@ -29,7 +29,18 @@ function updateCartCount() {
   document.getElementById("cartCount").textContent = count;
 }
 
+function setStatusMessage(message, isError = false) {
+  const status = document.getElementById("statusMessage");
+  status.textContent = message;
+  status.classList.toggle("status-error", isError);
+}
+
 function addToCart(product) {
+  if (product.inventory <= 0) {
+    setStatusMessage("This product is currently out of stock.", true);
+    return;
+  }
+
   const cart = getCart();
   const existing = cart.find((item) => item.id === product.id);
 
@@ -47,6 +58,7 @@ function addToCart(product) {
 
   saveCart(cart);
   updateCartCount();
+  setStatusMessage(`${product.name} added to cart.`);
 }
 
 function renderProducts(products) {
@@ -57,15 +69,28 @@ function renderProducts(products) {
 
   info.textContent = `Showing ${products.length} product${products.length !== 1 ? "s" : ""}`;
 
+  if (!products.length) {
+    grid.innerHTML = `
+      <div class="empty-state">
+        <h3>No products match this filter</h3>
+        <p>Try a different search term or choose another category.</p>
+      </div>
+    `;
+    return;
+  }
+
   products.forEach((product) => {
     const clone = template.content.cloneNode(true);
     const badge = clone.querySelector(".badge");
+    const inventoryPill = clone.querySelector(".inventory-pill");
+    const button = clone.querySelector(".add-btn");
+
     clone.querySelector("img").src = product.image;
     clone.querySelector("img").alt = product.name;
     clone.querySelector(".category").textContent = product.category;
     clone.querySelector("h3").textContent = product.name;
     clone.querySelector(".description").textContent = product.description;
-    clone.querySelector(".rating").textContent = `Rating ${product.rating}`;
+    clone.querySelector(".rating").textContent = `Rating ${Number(product.rating).toFixed(1)}`;
     clone.querySelector(".price").textContent = formatPrice(product.price);
 
     if (product.badge) {
@@ -74,9 +99,16 @@ function renderProducts(products) {
       badge.style.display = "none";
     }
 
-    clone.querySelector(".add-btn").addEventListener("click", () => {
-      addToCart(product);
-    });
+    inventoryPill.textContent = product.inventory > 0 ? `${product.inventory} in stock` : "Out of stock";
+    inventoryPill.classList.toggle("inventory-low", product.inventory > 0 && product.inventory <= 5);
+    inventoryPill.classList.toggle("inventory-empty", product.inventory <= 0);
+
+    if (product.inventory <= 0) {
+      button.disabled = true;
+      button.textContent = "Sold Out";
+    }
+
+    button.addEventListener("click", () => addToCart(product));
 
     grid.appendChild(clone);
   });
@@ -122,12 +154,23 @@ function renderCategoryChips() {
 }
 
 async function loadProducts() {
+  setStatusMessage("Loading products...");
   const response = await fetch("/api/products?limit=120");
+
+  if (!response.ok) {
+    throw new Error("Could not load products");
+  }
+
   const data = await response.json();
   state.products = data.products || [];
   state.categories = data.categories || [];
+
+  document.getElementById("heroProductCount").textContent = String(data.total || state.products.length);
+  document.getElementById("heroCategoryCount").textContent = String(state.categories.length);
+
   renderCategoryChips();
   renderProducts(filteredProducts());
+  setStatusMessage("Catalog synced.");
 }
 
 function wireEvents() {
@@ -149,8 +192,8 @@ async function init() {
   try {
     await loadProducts();
   } catch (error) {
-    document.getElementById("resultsInfo").textContent =
-      "Unable to load products. Start backend server and refresh.";
+    document.getElementById("resultsInfo").textContent = "Unable to load products.";
+    setStatusMessage("Start MongoDB and the backend server, then refresh.", true);
   }
 }
 

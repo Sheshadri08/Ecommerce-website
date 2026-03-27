@@ -1,37 +1,162 @@
 <!DOCTYPE html>
-<html>
-<head>
-    <title>Admin Panel</title>
-</head>
-<body>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>NovaCart Admin</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/style.css" />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <header class="site-header admin-header">
+      <div class="brand-wrap">
+        <span class="brand-dot"></span>
+        <div>
+          <h1>NovaCart Admin</h1>
+          <p class="header-subtitle">Catalog and order control center</p>
+        </div>
+      </div>
+      <div class="search-wrap">
+        <input id="adminSearch" type="search" placeholder="Search product table..." />
+      </div>
+      <div class="header-actions">
+        <a class="ghost-link" href="/">Storefront</a>
+        <button id="logoutButton" class="secondary-btn" type="button">Log Out</button>
+      </div>
+    </header>
 
-<h2>Add Product</h2>
+    <main class="admin-shell">
+      <section id="loginPanel" class="panel auth-panel">
+        <div>
+          <p class="section-kicker">Admin Access</p>
+          <h2>Sign in to manage products and orders</h2>
+          <p class="results-info">
+            Use the seeded admin account or your configured admin credentials.
+          </p>
+        </div>
 
-<input id="name" placeholder="Product Name"><br><br>
-<input id="price" placeholder="Price"><br><br>
-<input id="image" placeholder="Image URL"><br><br>
-<input id="desc" placeholder="Description"><br><br>
+        <form id="loginForm" class="checkout-form">
+          <input id="loginEmail" type="email" placeholder="Admin email" required />
+          <input id="loginPassword" type="password" placeholder="Password" required />
+          <button class="primary-btn" type="submit">Sign In</button>
+        </form>
 
-<button onclick="addProduct()">Add Product</button>
+        <div class="credential-note">
+          <strong>Default seed credentials</strong>
+          <span id="credentialHint">admin@novacart.local / Admin@123</span>
+        </div>
+        <p id="loginMessage" class="status-text"></p>
+      </section>
 
-<script>
-async function addProduct() {
-    const product = {
-        name: document.getElementById("name").value,
-        price: document.getElementById("price").value,
-        image: document.getElementById("image").value,
-        description: document.getElementById("desc").value
-    };
+      <section id="dashboardPanel" class="dashboard hidden">
+        <div class="metrics-grid">
+          <article class="metric-card">
+            <span>Products</span>
+            <strong id="metricProducts">0</strong>
+          </article>
+          <article class="metric-card">
+            <span>Orders</span>
+            <strong id="metricOrders">0</strong>
+          </article>
+          <article class="metric-card">
+            <span>Users</span>
+            <strong id="metricUsers">0</strong>
+          </article>
+          <article class="metric-card">
+            <span>Revenue</span>
+            <strong id="metricRevenue">INR 0</strong>
+          </article>
+        </div>
 
-    await fetch("http://localhost:5000/add-product", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(product)
-    });
+        <div class="admin-layout">
+          <section class="panel">
+            <div class="panel-heading">
+              <div>
+                <p class="section-kicker">Catalog</p>
+                <h3>Products</h3>
+              </div>
+              <button id="resetFormButton" class="table-action" type="button">New Product</button>
+            </div>
 
-    alert("Product Added ✅");
-}
-</script>
+            <form id="productForm" class="product-form">
+              <input id="productId" type="hidden" />
+              <input id="productName" placeholder="Product name" required />
+              <input id="productCategory" placeholder="Category" required />
+              <input id="productPrice" type="number" min="0" placeholder="Price" required />
+              <input id="productImage" placeholder="Image URL" required />
+              <textarea id="productDescription" rows="4" placeholder="Description" required></textarea>
+              <input id="productBadge" placeholder="Badge (optional)" />
+              <input id="productRating" type="number" min="0" max="5" step="0.1" placeholder="Rating" />
+              <input id="productInventory" type="number" min="0" placeholder="Inventory" required />
+              <label class="checkbox-row">
+                <input id="productFeatured" type="checkbox" />
+                <span>Feature this product</span>
+              </label>
+              <button class="primary-btn" type="submit">Save Product</button>
+            </form>
 
-</body>
+            <p id="productMessage" class="status-text"></p>
+
+            <div class="data-table-wrap">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>Name</th>
+                    <th>Category</th>
+                    <th>Price</th>
+                    <th>Inventory</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="productsTableBody"></tbody>
+              </table>
+            </div>
+          </section>
+
+          <section class="panel">
+            <div class="panel-heading">
+              <div>
+                <p class="section-kicker">Operations</p>
+                <h3>Orders</h3>
+              </div>
+              <button id="refreshOrdersButton" class="table-action" type="button">Refresh</button>
+            </div>
+
+            <p id="dashboardMessage" class="status-text"></p>
+
+            <div class="split-panels">
+              <div>
+                <h4>Recent Orders</h4>
+                <div class="data-table-wrap">
+                  <table class="data-table">
+                    <thead>
+                      <tr>
+                        <th>Customer</th>
+                        <th>Total</th>
+                        <th>Status</th>
+                      </tr>
+                    </thead>
+                    <tbody id="ordersTableBody"></tbody>
+                  </table>
+                </div>
+              </div>
+
+              <div>
+                <h4>Low Stock</h4>
+                <ul id="lowStockList" class="stock-list"></ul>
+              </div>
+            </div>
+          </section>
+        </div>
+      </section>
+    </main>
+
+    <script src="app.js"></script>
+  </body>
 </html>

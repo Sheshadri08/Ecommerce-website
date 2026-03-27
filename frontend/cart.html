@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
@@ -16,18 +16,29 @@
     <header class="site-header">
       <div class="brand-wrap">
         <span class="brand-dot"></span>
-        <h1>NovaCart</h1>
+        <div>
+          <h1>NovaCart</h1>
+          <p class="header-subtitle">Checkout</p>
+        </div>
       </div>
       <div class="search-wrap">
-        <input type="text" disabled value="Secure Checkout" />
+        <input type="text" disabled value="Secure order summary" />
       </div>
       <div class="header-actions">
+        <a class="ghost-link" href="/admin">Admin Panel</a>
         <a class="cart-link" href="index.html">Continue Shopping</a>
       </div>
     </header>
 
     <main class="cart-page">
-      <h2>Your Cart</h2>
+      <div class="page-heading">
+        <div>
+          <p class="section-kicker">Order Review</p>
+          <h2>Your Cart</h2>
+        </div>
+        <p class="results-info">Confirm quantities and place your order.</p>
+      </div>
+
       <div class="cart-layout">
         <section id="cartList" class="cart-list"></section>
 
@@ -41,11 +52,11 @@
           <form id="checkoutForm" class="checkout-form">
             <input id="customerName" placeholder="Your name" required />
             <input id="customerEmail" type="email" placeholder="Your email" required />
-            <button class="primary-btn" type="submit">Place Order</button>
+            <button id="checkoutButton" class="primary-btn" type="submit">Place Order</button>
           </form>
 
           <button id="clearCartBtn" class="secondary-btn" type="button">Clear Cart</button>
-          <p id="checkoutMessage"></p>
+          <p id="checkoutMessage" class="status-text"></p>
         </aside>
       </div>
     </main>

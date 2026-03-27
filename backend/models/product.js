@@ -9,6 +9,8 @@ const productSchema = new mongoose.Schema(
     description: { type: String, required: true },
     rating: { type: Number, default: 4 },
     badge: { type: String, default: "" },
+    inventory: { type: Number, default: 0, min: 0 },
+    featured: { type: Boolean, default: false },
   },
   { timestamps: true }
 );

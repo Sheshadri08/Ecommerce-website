@@ -16,34 +16,60 @@
     <header class="site-header">
       <div class="brand-wrap">
         <span class="brand-dot"></span>
-        <h1>NovaCart</h1>
+        <div>
+          <h1>NovaCart</h1>
+          <p class="header-subtitle">Modern commerce, simplified</p>
+        </div>
       </div>
       <div class="search-wrap">
-        <input id="searchInput" type="search" placeholder="Search products..." />
+        <input id="searchInput" type="search" placeholder="Search products, categories, brands..." />
       </div>
       <div class="header-actions">
         <select id="sortSelect" aria-label="Sort products">
-          <option value="featured">Featured</option>
+          <option value="featured">Newest</option>
           <option value="rating">Top Rated</option>
           <option value="price-asc">Price: Low to High</option>
           <option value="price-desc">Price: High to Low</option>
           <option value="name">Name A-Z</option>
         </select>
+        <a class="ghost-link" href="/admin">Admin Panel</a>
         <a class="cart-link" href="cart.html">Cart <span id="cartCount">0</span></a>
       </div>
     </header>
 
     <section class="hero">
       <div class="hero-content">
-        <p class="hero-tag">Spring Collection 2026</p>
-        <h2>Shop standout picks across fashion, tech, home and more.</h2>
-        <p>Premium products, fast checkout, and pricing that makes sense.</p>
+        <div>
+          <p class="hero-tag">Fresh arrivals</p>
+          <h2>Curated tech, style, home, and fitness picks powered by a live catalog.</h2>
+          <p>
+            Browse MongoDB-backed inventory, add to cart instantly, and check out with a clean
+            storefront flow.
+          </p>
+        </div>
+        <div class="hero-stat-grid">
+          <article>
+            <strong id="heroProductCount">0</strong>
+            <span>Products</span>
+          </article>
+          <article>
+            <strong id="heroCategoryCount">0</strong>
+            <span>Categories</span>
+          </article>
+          <article>
+            <strong>24h</strong>
+            <span>Dispatch target</span>
+          </article>
+        </div>
       </div>
     </section>
 
     <main class="main-content">
       <div id="categoryChips" class="chips"></div>
-      <div id="resultsInfo" class="results-info"></div>
+      <div class="toolbar">
+        <p id="resultsInfo" class="results-info"></p>
+        <p id="statusMessage" class="status-text"></p>
+      </div>
       <section id="productGrid" class="product-grid"></section>
     </main>
 
@@ -54,7 +80,10 @@
           <img alt="" loading="lazy" />
         </div>
         <div class="card-body">
-          <p class="category"></p>
+          <div class="card-topline">
+            <p class="category"></p>
+            <span class="inventory-pill"></span>
+          </div>
           <h3></h3>
           <p class="description"></p>
           <div class="card-meta">

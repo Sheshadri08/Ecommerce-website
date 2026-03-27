@@ -98,6 +98,7 @@ async function placeOrder(event) {
 
   const cart = getCart();
   const message = document.getElementById("checkoutMessage");
+  const checkoutButton = document.getElementById("checkoutButton");
 
   if (!cart.length) {
     message.textContent = "Your cart is empty.";
@@ -113,6 +114,8 @@ async function placeOrder(event) {
   }
 
   try {
+    checkoutButton.disabled = true;
+    message.textContent = "Submitting your order...";
     const response = await fetch("/api/orders", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -123,14 +126,20 @@ async function placeOrder(event) {
       }),
     });
 
-    if (!response.ok) throw new Error("Order failed");
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => ({}));
+      throw new Error(errorData.message || "Order failed");
+    }
 
     const order = await response.json();
     localStorage.removeItem(CART_KEY);
+    document.getElementById("checkoutForm").reset();
     render();
-    message.textContent = `Order ${order.id} confirmed. Total ${formatPrice(order.total)}.`;
+    message.textContent = `Order ${order.id.slice(-6).toUpperCase()} confirmed. Total ${formatPrice(order.total)}.`;
   } catch (error) {
-    message.textContent = "Could not place order. Please try again.";
+    message.textContent = error.message || "Could not place order. Please try again.";
+  } finally {
+    checkoutButton.disabled = false;
   }
 }
 

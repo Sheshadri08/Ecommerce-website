@@ -1,62 +1,125 @@
 const router = require("express").Router();
-const { catalog } = require("../data/catalog");
+const Order = require("../models/order");
+const Product = require("../models/product");
+const adminAuth = require("../middleware/adminAuth");
 
-const orders = [];
+function normalizeOrder(orderDoc) {
+  return {
+    id: String(orderDoc._id),
+    customerName: orderDoc.customerName,
+    customerEmail: orderDoc.customerEmail,
+    items: orderDoc.items.map((item) => ({
+      product: String(item.product),
+      name: item.name,
+      price: item.price,
+      quantity: item.quantity,
+      lineTotal: item.lineTotal,
+    })),
+    subtotal: orderDoc.subtotal,
+    shipping: orderDoc.shipping,
+    tax: orderDoc.tax,
+    total: orderDoc.total,
+    status: orderDoc.status,
+    createdAt: orderDoc.createdAt,
+    updatedAt: orderDoc.updatedAt,
+  };
+}
 
-router.get("/", (req, res) => {
-  res.json({
-    orders,
-    total: orders.length,
-  });
+router.get("/", adminAuth, async (req, res) => {
+  try {
+    const orders = await Order.find({}).sort({ createdAt: -1 }).limit(100);
+    return res.json({
+      orders: orders.map(normalizeOrder),
+      total: orders.length,
+    });
+  } catch (error) {
+    return res.status(500).json({ message: "Could not load orders" });
+  }
 });
 
-router.post("/", (req, res) => {
+router.post("/", async (req, res) => {
   const { customerName, customerEmail, items } = req.body;
 
   if (!customerName || !customerEmail || !Array.isArray(items) || items.length === 0) {
     return res.status(400).json({ message: "Please provide customer details and items" });
   }
 
-  const normalizedItems = items
-    .map((item) => {
-      const product = catalog.find((productItem) => productItem.id === item.id);
-      if (!product) return null;
+  try {
+    const productIds = items.map((item) => item.id);
+    const products = await Product.find({ _id: { $in: productIds } });
+    const productMap = new Map(products.map((product) => [String(product._id), product]));
 
-      const quantity = Math.max(1, Number(item.quantity || 1));
-      return {
-        id: product.id,
-        name: product.name,
-        price: product.price,
-        quantity,
-        lineTotal: product.price * quantity,
-      };
-    })
-    .filter(Boolean);
+    const normalizedItems = items
+      .map((item) => {
+        const product = productMap.get(String(item.id));
+        if (!product) return null;
 
-  if (!normalizedItems.length) {
-    return res.status(400).json({ message: "No valid products in order" });
+        const quantity = Math.max(1, Number(item.quantity || 1));
+        if (product.inventory < quantity) {
+          throw new Error(`Only ${product.inventory} unit(s) left for ${product.name}`);
+        }
+
+        return {
+          product: product._id,
+          name: product.name,
+          price: product.price,
+          quantity,
+          lineTotal: product.price * quantity,
+        };
+      })
+      .filter(Boolean);
+
+    if (!normalizedItems.length) {
+      return res.status(400).json({ message: "No valid products in order" });
+    }
+
+    const subtotal = normalizedItems.reduce((sum, item) => sum + item.lineTotal, 0);
+    const shipping = subtotal >= 3999 ? 0 : 149;
+    const tax = Math.round(subtotal * 0.05);
+    const total = subtotal + shipping + tax;
+
+    const order = await Order.create({
+      customerName,
+      customerEmail,
+      items: normalizedItems,
+      subtotal,
+      shipping,
+      tax,
+      total,
+      status: "confirmed",
+    });
+
+    await Product.bulkWrite(
+      normalizedItems.map((item) => ({
+        updateOne: {
+          filter: { _id: item.product },
+          update: { $inc: { inventory: -item.quantity } },
+        },
+      }))
+    );
+
+    return res.status(201).json(normalizeOrder(order));
+  } catch (error) {
+    return res.status(400).json({ message: error.message || "Could not place order" });
   }
+});
 
-  const subtotal = normalizedItems.reduce((sum, item) => sum + item.lineTotal, 0);
-  const shipping = subtotal >= 3999 ? 0 : 149;
-  const tax = Math.round(subtotal * 0.05);
-  const total = subtotal + shipping + tax;
+router.patch("/:id/status", adminAuth, async (req, res) => {
+  try {
+    const order = await Order.findByIdAndUpdate(
+      req.params.id,
+      { status: req.body.status },
+      { new: true, runValidators: true }
+    );
 
-  const order = {
-    id: `ord-${Date.now()}`,
-    customerName,
-    customerEmail,
-    items: normalizedItems,
-    subtotal,
-    shipping,
-    tax,
-    total,
-    status: "confirmed",
-    createdAt: new Date().toISOString(),
-  };
+    if (!order) {
+      return res.status(404).json({ message: "Order not found" });
+    }
 
-  orders.unshift(order);
-  return res.status(201).json(order);
+    return res.json(normalizeOrder(order));
+  } catch (error) {
+    return res.status(400).json({ message: "Could not update order status" });
+  }
 });
 
 module.exports = router;
