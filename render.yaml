@@ -1,0 +1,23 @@
+services:
+  - type: web
+    name: novacart
+    runtime: node
+    plan: free
+    buildCommand: npm install
+    startCommand: node backend/server.js
+    autoDeploy: true
+    envVars:
+      - key: NODE_VERSION
+        value: 20
+      - key: PORT
+        value: 10000
+      - key: MONGODB_URI
+        sync: false
+      - key: ADMIN_NAME
+        value: NovaCart Admin
+      - key: ADMIN_EMAIL
+        value: admin@novacart.local
+      - key: ADMIN_PASSWORD
+        sync: false
+      - key: ADMIN_TOKEN_SECRET
+        sync: false
