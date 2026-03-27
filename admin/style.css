@@ -123,6 +123,34 @@
   gap: 18px;
 }
 
+.selected-order {
+  padding: 16px;
+  background: var(--surface-2);
+  border: 1px solid var(--line);
+  border-radius: 16px;
+}
+
+.empty-order {
+  color: var(--muted);
+}
+
+.order-item-list {
+  margin: 12px 0 0;
+  padding-left: 18px;
+}
+
+.order-item-list li {
+  margin: 6px 0;
+}
+
+.status-select {
+  min-width: 130px;
+  padding: 8px 10px;
+  border-radius: 10px;
+  border: 1px solid var(--line);
+  background: #fff;
+}
+
 .stock-list {
   list-style: none;
   padding: 0;

@@ -3,6 +3,8 @@ const ADMIN_TOKEN_KEY = "novacart_admin_token";
 const state = {
   token: localStorage.getItem(ADMIN_TOKEN_KEY) || "",
   products: [],
+  orders: [],
+  selectedOrderId: "",
 };
 
 function formatPrice(value) {
@@ -106,31 +108,91 @@ function renderProductsTable() {
   });
 }
 
+function renderSelectedOrder() {
+  const card = document.getElementById("selectedOrderCard");
+  const order = state.orders.find((entry) => entry.id === state.selectedOrderId);
+
+  if (!order) {
+    card.className = "selected-order empty-order";
+    card.textContent = "Select an order to review its items and customer details.";
+    return;
+  }
+
+  card.className = "selected-order";
+  card.innerHTML = `
+    <strong>${order.customerName}</strong>
+    <p class="results-info">${order.customerEmail}</p>
+    <p class="results-info">Placed ${new Date(order.createdAt).toLocaleString()}</p>
+    <p><strong>Total:</strong> ${formatPrice(order.total)}</p>
+    <p><strong>Status:</strong> ${order.status}</p>
+    <ul class="order-item-list">
+      ${order.items
+        .map((item) => `<li>${item.name} x ${item.quantity} = ${formatPrice(item.lineTotal)}</li>`)
+        .join("")}
+    </ul>
+  `;
+}
+
+function renderOrdersTable() {
+  const ordersBody = document.getElementById("ordersTableBody");
+  ordersBody.innerHTML = "";
+
+  if (!state.orders.length) {
+    ordersBody.innerHTML = `<tr><td colspan="4">No orders yet.</td></tr>`;
+    renderSelectedOrder();
+    return;
+  }
+
+  state.orders.forEach((order) => {
+    const row = document.createElement("tr");
+    row.innerHTML = `
+      <td>
+        <strong>${order.customerName}</strong><br />
+        <span class="results-info">${new Date(order.createdAt).toLocaleString()}</span>
+      </td>
+      <td>${order.items.length}</td>
+      <td>${formatPrice(order.total)}</td>
+      <td></td>
+    `;
+
+    row.addEventListener("click", () => {
+      state.selectedOrderId = order.id;
+      renderSelectedOrder();
+    });
+
+    const statusCell = row.lastElementChild;
+    const select = document.createElement("select");
+    select.className = "status-select";
+
+    ["confirmed", "processing", "shipped", "delivered", "cancelled"].forEach((status) => {
+      const option = document.createElement("option");
+      option.value = status;
+      option.textContent = status;
+      option.selected = order.status === status;
+      select.appendChild(option);
+    });
+
+    select.addEventListener("click", (event) => event.stopPropagation());
+    select.addEventListener("change", async (event) => {
+      await updateOrderStatus(order.id, event.target.value);
+    });
+
+    statusCell.appendChild(select);
+    ordersBody.appendChild(row);
+  });
+
+  if (!state.selectedOrderId && state.orders[0]) {
+    state.selectedOrderId = state.orders[0].id;
+  }
+
+  renderSelectedOrder();
+}
+
 function renderOverview(data) {
   document.getElementById("metricProducts").textContent = data.metrics.products;
   document.getElementById("metricOrders").textContent = data.metrics.orders;
   document.getElementById("metricUsers").textContent = data.metrics.users;
   document.getElementById("metricRevenue").textContent = formatPrice(data.metrics.revenue);
-
-  const ordersBody = document.getElementById("ordersTableBody");
-  ordersBody.innerHTML = "";
-
-  if (!data.latestOrders.length) {
-    ordersBody.innerHTML = `<tr><td colspan="3">No orders yet.</td></tr>`;
-  } else {
-    data.latestOrders.forEach((order) => {
-      const row = document.createElement("tr");
-      row.innerHTML = `
-        <td>
-          <strong>${order.customerName}</strong><br />
-          <span class="results-info">${new Date(order.createdAt).toLocaleString()}</span>
-        </td>
-        <td>${formatPrice(order.total)}</td>
-        <td>${order.status}</td>
-      `;
-      ordersBody.appendChild(row);
-    });
-  }
 
   const lowStockList = document.getElementById("lowStockList");
   lowStockList.innerHTML = "";
@@ -144,7 +206,7 @@ function renderOverview(data) {
     const item = document.createElement("li");
     item.innerHTML = `
       <strong>${product.name}</strong>
-      <span>${product.category} • ${product.inventory} left</span>
+      <span>${product.category} - ${product.inventory} left</span>
     `;
     lowStockList.appendChild(item);
   });
@@ -170,6 +232,19 @@ async function loadProducts() {
   renderProductsTable();
 }
 
+async function loadOrders() {
+  const response = await adminFetch("/api/orders");
+  if (response.status === 401) {
+    logout();
+    throw new Error("Your admin session expired. Please sign in again.");
+  }
+  if (!response.ok) throw new Error("Could not load orders");
+
+  const data = await response.json();
+  state.orders = data.orders || [];
+  renderOrdersTable();
+}
+
 async function loadOverview() {
   const response = await adminFetch("/api/admin/overview");
   if (response.status === 401) {
@@ -185,10 +260,33 @@ async function loadOverview() {
 async function refreshDashboard() {
   try {
     setMessage("dashboardMessage", "Refreshing dashboard...");
-    await Promise.all([loadProducts(), loadOverview()]);
+    await Promise.all([loadProducts(), loadOrders(), loadOverview()]);
     setMessage("dashboardMessage", "Dashboard synced.");
   } catch (error) {
     setMessage("dashboardMessage", error.message || "Could not refresh dashboard", true);
+  }
+}
+
+async function updateOrderStatus(orderId, status) {
+  try {
+    setMessage("dashboardMessage", `Updating order status to ${status}...`);
+    const response = await adminFetch(`/api/orders/${orderId}/status`, {
+      method: "PATCH",
+      body: JSON.stringify({ status }),
+    });
+
+    const data = await response.json().catch(() => ({}));
+    if (!response.ok) {
+      throw new Error(data.message || "Could not update order status");
+    }
+
+    state.orders = state.orders.map((order) => (order.id === orderId ? data : order));
+    renderOrdersTable();
+    renderSelectedOrder();
+    setMessage("dashboardMessage", "Order status updated.");
+  } catch (error) {
+    setMessage("dashboardMessage", error.message || "Could not update order status", true);
+    await refreshDashboard();
   }
 }
 
@@ -271,6 +369,8 @@ async function deleteProduct(productId) {
 
 function logout() {
   state.token = "";
+  state.orders = [];
+  state.selectedOrderId = "";
   localStorage.removeItem(ADMIN_TOKEN_KEY);
   setAuthenticated(false);
 }
