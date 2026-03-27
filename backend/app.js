@@ -19,7 +19,12 @@ function createApp() {
   app.use("/api/admin", adminRoutes);
 
   app.use(express.static(path.join(__dirname, "..", "frontend")));
-  app.use("/admin", express.static(path.join(__dirname, "..", "admin")));
+  app.use(
+    "/admin",
+    express.static(path.join(__dirname, "..", "admin"), {
+      index: false,
+    })
+  );
 
   app.get("/", (req, res) => {
     res.sendFile(path.join(__dirname, "..", "frontend", "index.html"));
