@@ -1,129 +1,55 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Cart</title>
-    <link rel="stylesheet" href="style.css">
-</head>
-<body>
+﻿<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>NovaCart | Your Cart</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="brand-wrap">
+        <span class="brand-dot"></span>
+        <h1>NovaCart</h1>
+      </div>
+      <div class="search-wrap">
+        <input type="text" disabled value="Secure Checkout" />
+      </div>
+      <div class="header-actions">
+        <a class="cart-link" href="index.html">Continue Shopping</a>
+      </div>
+    </header>
 
-<h2 style="text-align:center;">🛒 Your Cart</h2>
+    <main class="cart-page">
+      <h2>Your Cart</h2>
+      <div class="cart-layout">
+        <section id="cartList" class="cart-list"></section>
 
-<div id="cart"></div>
+        <aside class="order-summary">
+          <h3>Order Summary</h3>
+          <div class="summary-line"><span>Subtotal</span><span id="subtotal">INR 0</span></div>
+          <div class="summary-line"><span>Shipping</span><span id="shipping">INR 0</span></div>
+          <div class="summary-line"><span>Tax (5%)</span><span id="tax">INR 0</span></div>
+          <div class="summary-line summary-total"><span>Total</span><span id="total">INR 0</span></div>
 
-<h2 id="total" style="text-align:center;"></h2>
+          <form id="checkoutForm" class="checkout-form">
+            <input id="customerName" placeholder="Your name" required />
+            <input id="customerEmail" type="email" placeholder="Your email" required />
+            <button class="primary-btn" type="submit">Place Order</button>
+          </form>
 
-<div style="text-align:center;">
-    <button onclick="checkout()">Pay Now 💳</button>
-</div>
+          <button id="clearCartBtn" class="secondary-btn" type="button">Clear Cart</button>
+          <p id="checkoutMessage"></p>
+        </aside>
+      </div>
+    </main>
 
-<script>
-let cart = JSON.parse(localStorage.getItem("cart")) || [];
-
-// 🧠 Convert to quantity system
-let cartMap = {};
-
-cart.forEach(item => {
-    if (cartMap[item.name]) {
-        cartMap[item.name].qty += 1;
-    } else {
-        cartMap[item.name] = { ...item, qty: 1 };
-    }
-});
-
-let cartItems = Object.values(cartMap);
-
-function renderCart() {
-    const container = document.getElementById("cart");
-    container.innerHTML = "";
-    let total = 0;
-
-    cartItems.forEach((item, index) => {
-        total += item.price * item.qty;
-
-        container.innerHTML += `
-        <div class="cart-card">
-            <img src="${item.image}" width="100">
-            <div>
-                <h3>${item.name}</h3>
-                <p>₹${item.price}</p>
-
-                <button onclick="decrease(${index})">➖</button>
-                ${item.qty}
-                <button onclick="increase(${index})">➕</button>
-
-                <br><br>
-                <button onclick="removeItem(${index})">Remove ❌</button>
-            </div>
-        </div>
-        `;
-    });
-
-    document.getElementById("total").innerText = "Total: ₹" + total;
-}
-
-function increase(index) {
-    cartItems[index].qty++;
-    updateStorage();
-}
-
-function decrease(index) {
-    if (cartItems[index].qty > 1) {
-        cartItems[index].qty--;
-    }
-    updateStorage();
-}
-
-function removeItem(index) {
-    cartItems.splice(index, 1);
-    updateStorage();
-}
-
-function updateStorage() {
-    let newCart = [];
-
-    cartItems.forEach(item => {
-        for (let i = 0; i < item.qty; i++) {
-            newCart.push(item);
-        }
-    });
-
-    localStorage.setItem("cart", JSON.stringify(newCart));
-    location.reload();
-}
-
-// 💳 PAYMENT
-function checkout() {
-    let total = 0;
-    cartItems.forEach(item => total += item.price * item.qty);
-
-    fetch("http://localhost:5000/create-order", {
-        method: "POST",
-        headers: {"Content-Type": "application/json"},
-        body: JSON.stringify({ amount: total })
-    })
-    .then(res => res.json())
-    .then(data => {
-        const options = {
-            key: "YOUR_RAZORPAY_KEY",
-            amount: data.amount,
-            currency: "INR",
-            name: "MyShop",
-            order_id: data.id,
-            handler: function () {
-                alert("Payment Successful 🎉");
-                localStorage.removeItem("cart");
-                window.location.href = "index.html";
-            }
-        };
-        const rzp = new Razorpay(options);
-        rzp.open();
-    });
-}
-
-renderCart();
-</script>
-
-<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
-
-</body>
+    <script src="cart.js"></script>
+  </body>
 </html>

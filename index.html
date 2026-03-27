@@ -1,34 +1,71 @@
-
 <!DOCTYPE html>
-<html>
-<head>
-  <title>MyShop</title>
-  <link rel="stylesheet" href="style.css">
-</head>
-<body>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>NovaCart | Smart Shopping</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="brand-wrap">
+        <span class="brand-dot"></span>
+        <h1>NovaCart</h1>
+      </div>
+      <div class="search-wrap">
+        <input id="searchInput" type="search" placeholder="Search products..." />
+      </div>
+      <div class="header-actions">
+        <select id="sortSelect" aria-label="Sort products">
+          <option value="featured">Featured</option>
+          <option value="rating">Top Rated</option>
+          <option value="price-asc">Price: Low to High</option>
+          <option value="price-desc">Price: High to Low</option>
+          <option value="name">Name A-Z</option>
+        </select>
+        <a class="cart-link" href="cart.html">Cart <span id="cartCount">0</span></a>
+      </div>
+    </header>
 
-<!-- NAVBAR -->
-<header class="navbar">
-  <div class="logo">🛒 MyShop</div>
-  <input type="text" id="search" placeholder="Search for products...">
-  <div class="nav-icons">
-    <span>👤</span>
-    <span>🛍️</span>
-  </div>
-</header>
+    <section class="hero">
+      <div class="hero-content">
+        <p class="hero-tag">Spring Collection 2026</p>
+        <h2>Shop standout picks across fashion, tech, home and more.</h2>
+        <p>Premium products, fast checkout, and pricing that makes sense.</p>
+      </div>
+    </section>
 
-<!-- HERO -->
-<section class="hero">
-  <h1>Big Deals. Big Savings.</h1>
-  <p>Discover amazing products at the best prices</p>
-</section>
+    <main class="main-content">
+      <div id="categoryChips" class="chips"></div>
+      <div id="resultsInfo" class="results-info"></div>
+      <section id="productGrid" class="product-grid"></section>
+    </main>
 
-<!-- PRODUCTS -->
-<section>
-  <h2 class="section-title">Trending Products</h2>
-  <div id="products" class="products"></div>
-</section>
+    <template id="productTemplate">
+      <article class="product-card">
+        <div class="card-image-wrap">
+          <span class="badge"></span>
+          <img alt="" loading="lazy" />
+        </div>
+        <div class="card-body">
+          <p class="category"></p>
+          <h3></h3>
+          <p class="description"></p>
+          <div class="card-meta">
+            <span class="rating"></span>
+            <strong class="price"></strong>
+          </div>
+          <button type="button" class="add-btn">Add to Cart</button>
+        </div>
+      </article>
+    </template>
 
-<script src="app.js"></script>
-</body>
+    <script src="order.js"></script>
+  </body>
 </html>
