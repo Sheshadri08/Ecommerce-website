@@ -1,0 +1,55 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>NovaCart | Your Cart</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="brand-wrap">
+        <span class="brand-dot"></span>
+        <h1>NovaCart</h1>
+      </div>
+      <div class="search-wrap">
+        <input type="text" disabled value="Secure Checkout" />
+      </div>
+      <div class="header-actions">
+        <a class="cart-link" href="index.html">Continue Shopping</a>
+      </div>
+    </header>
+
+    <main class="cart-page">
+      <h2>Your Cart</h2>
+      <div class="cart-layout">
+        <section id="cartList" class="cart-list"></section>
+
+        <aside class="order-summary">
+          <h3>Order Summary</h3>
+          <div class="summary-line"><span>Subtotal</span><span id="subtotal">INR 0</span></div>
+          <div class="summary-line"><span>Shipping</span><span id="shipping">INR 0</span></div>
+          <div class="summary-line"><span>Tax (5%)</span><span id="tax">INR 0</span></div>
+          <div class="summary-line summary-total"><span>Total</span><span id="total">INR 0</span></div>
+
+          <form id="checkoutForm" class="checkout-form">
+            <input id="customerName" placeholder="Your name" required />
+            <input id="customerEmail" type="email" placeholder="Your email" required />
+            <button class="primary-btn" type="submit">Place Order</button>
+          </form>
+
+          <button id="clearCartBtn" class="secondary-btn" type="button">Clear Cart</button>
+          <p id="checkoutMessage"></p>
+        </aside>
+      </div>
+    </main>
+
+    <script src="cart.js"></script>
+  </body>
+</html>
