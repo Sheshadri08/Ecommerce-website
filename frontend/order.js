@@ -1,7 +1,11 @@
 const CART_KEY = "novacart_cart_v1";
 const WISHLIST_KEY = "novacart_wishlist_v1";
+const CONFIG = window.NOVACART_CONFIG || {};
+const API_BASE_URL = (CONFIG.API_BASE_URL || "").replace(/\/$/, "");
+const ADMIN_URL = CONFIG.ADMIN_URL || (API_BASE_URL ? `${API_BASE_URL}/admin` : "/admin");
 
 const state = {
+  allProducts: [],
   products: [],
   categories: [],
   activeCategory: "All",
@@ -14,12 +18,18 @@ const state = {
   selectedProductId: "",
 };
 
+let searchTimer = null;
+
 function formatPrice(value) {
   return new Intl.NumberFormat("en-IN", {
     style: "currency",
     currency: "INR",
     maximumFractionDigits: 0,
   }).format(value);
+}
+
+function apiUrl(path) {
+  return API_BASE_URL ? `${API_BASE_URL}${path}` : path;
 }
 
 function getCart() {
@@ -92,12 +102,12 @@ function toggleWishlist(productId) {
   saveWishlist(nextWishlist);
   updateWishlistSummary();
   renderWishlistRail();
-  renderProducts(filteredProducts());
+  renderProducts(state.products);
   syncModalWishlistButton();
 }
 
 function featuredProducts() {
-  return [...state.products]
+  return [...state.allProducts]
     .filter((product) => product.badge || product.rating >= 4.5)
     .sort((left, right) => right.rating - left.rating)
     .slice(0, 8);
@@ -105,39 +115,7 @@ function featuredProducts() {
 
 function wishlistProducts() {
   const wishlistIds = new Set(getWishlist());
-  return state.products.filter((product) => wishlistIds.has(product.id));
-}
-
-function filteredProducts() {
-  let list = [...state.products];
-  const search = state.searchTerm.toLowerCase();
-
-  if (state.activeCategory !== "All") {
-    list = list.filter((item) => item.category === state.activeCategory);
-  }
-
-  if (search) {
-    list = list.filter((item) =>
-      [item.name, item.description, item.category].join(" ").toLowerCase().includes(search)
-    );
-  }
-
-  list = list.filter((item) => item.price >= state.minPrice && item.price <= state.maxPrice);
-
-  if (state.featuredOnly) {
-    list = list.filter((item) => item.badge || item.rating >= 4.5);
-  }
-
-  if (state.inStockOnly) {
-    list = list.filter((item) => item.inventory > 0);
-  }
-
-  if (state.sort === "price-asc") list.sort((a, b) => a.price - b.price);
-  if (state.sort === "price-desc") list.sort((a, b) => b.price - a.price);
-  if (state.sort === "rating") list.sort((a, b) => b.rating - a.rating);
-  if (state.sort === "name") list.sort((a, b) => a.name.localeCompare(b.name));
-
-  return list;
+  return state.allProducts.filter((product) => wishlistIds.has(product.id));
 }
 
 function renderCategoryChips() {
@@ -148,10 +126,10 @@ function renderCategoryChips() {
     const button = document.createElement("button");
     button.className = `chip ${name === state.activeCategory ? "active" : ""}`;
     button.textContent = name;
-    button.addEventListener("click", () => {
+    button.addEventListener("click", async () => {
       state.activeCategory = name;
       renderCategoryChips();
-      renderProducts(filteredProducts());
+      await loadProducts();
     });
     chipWrap.appendChild(button);
   });
@@ -270,7 +248,7 @@ function renderWishlistRail() {
 }
 
 function selectedProduct() {
-  return state.products.find((product) => product.id === state.selectedProductId) || null;
+  return state.allProducts.find((product) => product.id === state.selectedProductId) || null;
 }
 
 function syncModalWishlistButton() {
@@ -281,7 +259,7 @@ function syncModalWishlistButton() {
 }
 
 function openProductModal(productId) {
-  const product = state.products.find((entry) => entry.id === productId);
+  const product = state.allProducts.find((entry) => entry.id === productId);
   if (!product) return;
 
   state.selectedProductId = productId;
@@ -303,13 +281,46 @@ function closeProductModal() {
   document.getElementById("productModal").close();
 }
 
-function applyFilters() {
-  renderProducts(filteredProducts());
+function buildSearchParams() {
+  const params = new URLSearchParams();
+
+  params.set("limit", "120");
+  params.set("sort", state.sort);
+
+  if (state.searchTerm.trim()) {
+    params.set("q", state.searchTerm.trim());
+  }
+
+  if (state.activeCategory !== "All") {
+    params.set("category", state.activeCategory);
+  }
+
+  if (state.minPrice > 0) {
+    params.set("minPrice", String(state.minPrice));
+  }
+
+  if (Number.isFinite(state.maxPrice)) {
+    params.set("maxPrice", String(state.maxPrice));
+  }
+
+  return params;
+}
+
+async function loadInitialProducts() {
+  const response = await fetch(apiUrl("/api/products?limit=120"));
+
+  if (!response.ok) {
+    throw new Error("Could not load products");
+  }
+
+  const data = await response.json();
+  state.allProducts = data.products || [];
+  state.categories = data.categories || [];
 }
 
 async function loadProducts() {
   setStatusMessage("Loading products...");
-  const response = await fetch("/api/products?limit=120");
+  const response = await fetch(apiUrl(`/api/products?${buildSearchParams().toString()}`));
 
   if (!response.ok) {
     throw new Error("Could not load products");
@@ -317,18 +328,26 @@ async function loadProducts() {
 
   const data = await response.json();
   state.products = data.products || [];
-  state.categories = data.categories || [];
+  state.categories = data.categories || state.categories;
 
-  document.getElementById("heroProductCount").textContent = String(data.total || state.products.length);
+  if (state.featuredOnly) {
+    state.products = state.products.filter((product) => product.badge || product.rating >= 4.5);
+  }
+
+  if (state.inStockOnly) {
+    state.products = state.products.filter((product) => product.inventory > 0);
+  }
+
+  document.getElementById("heroProductCount").textContent = String(state.allProducts.length || data.total || 0);
   document.getElementById("heroCategoryCount").textContent = String(state.categories.length);
   document.getElementById("heroDealCount").textContent = String(
-    state.products.filter((product) => product.badge).length
+    state.allProducts.filter((product) => product.badge).length
   );
 
   renderCategoryChips();
   renderFeaturedRail();
   renderWishlistRail();
-  applyFilters();
+  renderProducts(state.products);
   updateWishlistSummary();
   setStatusMessage("Catalog synced.");
 }
@@ -350,38 +369,55 @@ function resetFilters() {
   document.getElementById("stockOnlyInput").checked = false;
 
   renderCategoryChips();
-  applyFilters();
+  loadProducts().catch(() => {
+    document.getElementById("resultsInfo").textContent = "Unable to load products.";
+    setStatusMessage("Start backend server and refresh.", true);
+  });
+}
+
+function queueProductReload() {
+  window.clearTimeout(searchTimer);
+  searchTimer = window.setTimeout(() => {
+    loadProducts().catch(() => {
+      document.getElementById("resultsInfo").textContent = "Unable to load products.";
+      setStatusMessage("Start backend server and refresh.", true);
+    });
+  }, 180);
 }
 
 function wireEvents() {
+  document.querySelectorAll("[data-admin-link]").forEach((link) => {
+    link.href = ADMIN_URL;
+  });
+
   document.getElementById("searchInput").addEventListener("input", (event) => {
     state.searchTerm = event.target.value || "";
-    applyFilters();
+    queueProductReload();
   });
 
   document.getElementById("sortSelect").addEventListener("change", (event) => {
     state.sort = event.target.value;
-    applyFilters();
+    queueProductReload();
   });
 
   document.getElementById("minPriceInput").addEventListener("input", (event) => {
     state.minPrice = Number(event.target.value || 0);
-    applyFilters();
+    queueProductReload();
   });
 
   document.getElementById("maxPriceInput").addEventListener("input", (event) => {
     state.maxPrice = event.target.value ? Number(event.target.value) : Infinity;
-    applyFilters();
+    queueProductReload();
   });
 
   document.getElementById("featuredOnlyInput").addEventListener("change", (event) => {
     state.featuredOnly = event.target.checked;
-    applyFilters();
+    queueProductReload();
   });
 
   document.getElementById("stockOnlyInput").addEventListener("change", (event) => {
     state.inStockOnly = event.target.checked;
-    applyFilters();
+    queueProductReload();
   });
 
   document.getElementById("resetFiltersButton").addEventListener("click", resetFilters);
@@ -412,10 +448,11 @@ async function init() {
   wireEvents();
 
   try {
+    await loadInitialProducts();
     await loadProducts();
   } catch (error) {
     document.getElementById("resultsInfo").textContent = "Unable to load products.";
-    setStatusMessage("Start MongoDB and the backend server, then refresh.", true);
+    setStatusMessage("Start backend server and refresh.", true);
   }
 }
 
