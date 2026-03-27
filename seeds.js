@@ -1,15 +1,4 @@
-const router = require("express").Router();
-const User = require("../models/User");
+﻿const { catalog } = require("./data/catalog");
 
-// Login
-router.post("/login", async (req, res) => {
-  const user = await User.findOne({ email: req.body.email });
-
-  if (!user || user.password !== req.body.password) {
-    return res.status(401).json("Invalid credentials");
-  }
-
-  res.json(user);
-});
-
-module.exports = router;
+console.log(`Seed preview loaded: ${catalog.length} products available.`);
+console.log("This project currently uses in-memory product data from backend/data/catalog.js.");
