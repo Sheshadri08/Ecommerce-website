@@ -13,6 +13,12 @@
     <link rel="stylesheet" href="style.css" />
   </head>
   <body>
+    <div class="top-strip">
+      <span>Free shipping above INR 3,999</span>
+      <span id="wishlistSummary">Wishlist 0</span>
+      <span>Trusted checkout with live inventory</span>
+    </div>
+
     <header class="site-header">
       <div class="brand-wrap">
         <span class="brand-dot"></span>
@@ -22,7 +28,7 @@
         </div>
       </div>
       <div class="search-wrap">
-        <input id="searchInput" type="search" placeholder="Search products, categories, brands..." />
+        <input id="searchInput" type="search" placeholder="Search products, categories, trends..." />
       </div>
       <div class="header-actions">
         <select id="sortSelect" aria-label="Sort products">
@@ -41,11 +47,15 @@
       <div class="hero-content">
         <div>
           <p class="hero-tag">Fresh arrivals</p>
-          <h2>Curated tech, style, home, and fitness picks powered by a live catalog.</h2>
+          <h2>More categories, more discovery, and smarter browsing like a real marketplace.</h2>
           <p>
-            Browse MongoDB-backed inventory, add to cart instantly, and check out with a clean
-            storefront flow.
+            Explore featured deals, filter fast, save favorites, and preview products before you
+            add them to cart.
           </p>
+          <div class="hero-cta-row">
+            <button id="jumpDealsButton" class="ghost-link" type="button">View hot deals</button>
+            <button id="jumpCatalogButton" class="cart-link" type="button">Shop catalog</button>
+          </div>
         </div>
         <div class="hero-stat-grid">
           <article>
@@ -57,26 +67,123 @@
             <span>Categories</span>
           </article>
           <article>
-            <strong>24h</strong>
-            <span>Dispatch target</span>
+            <strong id="heroDealCount">0</strong>
+            <span>Deals live</span>
           </article>
         </div>
       </div>
     </section>
 
     <main class="main-content">
-      <div id="categoryChips" class="chips"></div>
-      <div class="toolbar">
-        <p id="resultsInfo" class="results-info"></p>
-        <p id="statusMessage" class="status-text"></p>
-      </div>
-      <section id="productGrid" class="product-grid"></section>
+      <section class="promo-grid">
+        <article class="promo-card promo-card-featured">
+          <p class="section-kicker">Big savings</p>
+          <h3>Deal zone</h3>
+          <p>Badged products, trending picks, and fast-moving categories in one place.</p>
+        </article>
+        <article class="promo-card">
+          <p class="section-kicker">Fast picks</p>
+          <h3>Quick view</h3>
+          <p>Open product details instantly without leaving the homepage flow.</p>
+        </article>
+        <article class="promo-card">
+          <p class="section-kicker">Save for later</p>
+          <h3>Wishlist</h3>
+          <p>Keep track of products you want to revisit before checkout.</p>
+        </article>
+      </section>
+
+      <section id="featuredSection" class="collection-block">
+        <div class="section-heading">
+          <div>
+            <p class="section-kicker">Featured lane</p>
+            <h3>Popular right now</h3>
+          </div>
+          <p class="results-info">Top-rated and badged picks from across the store.</p>
+        </div>
+        <div id="featuredRail" class="featured-rail"></div>
+      </section>
+
+      <section id="wishlistSection" class="collection-block hidden">
+        <div class="section-heading">
+          <div>
+            <p class="section-kicker">Saved products</p>
+            <h3>Your wishlist</h3>
+          </div>
+          <p class="results-info">Quick access to the items you bookmarked.</p>
+        </div>
+        <div id="wishlistRail" class="featured-rail"></div>
+      </section>
+
+      <section id="catalogSection" class="catalog-shell">
+        <aside class="filter-panel">
+          <div class="section-heading compact-heading">
+            <div>
+              <p class="section-kicker">Browse smarter</p>
+              <h3>Filters</h3>
+            </div>
+          </div>
+
+          <div class="filter-group">
+            <label for="minPriceInput">Minimum price</label>
+            <input id="minPriceInput" type="number" min="0" placeholder="0" />
+          </div>
+
+          <div class="filter-group">
+            <label for="maxPriceInput">Maximum price</label>
+            <input id="maxPriceInput" type="number" min="0" placeholder="15000" />
+          </div>
+
+          <label class="check-row">
+            <input id="featuredOnlyInput" type="checkbox" />
+            <span>Featured deals only</span>
+          </label>
+
+          <label class="check-row">
+            <input id="stockOnlyInput" type="checkbox" />
+            <span>In-stock items only</span>
+          </label>
+
+          <button id="resetFiltersButton" class="secondary-btn" type="button">Reset filters</button>
+        </aside>
+
+        <div class="catalog-main">
+          <div id="categoryChips" class="chips"></div>
+          <div class="toolbar">
+            <p id="resultsInfo" class="results-info"></p>
+            <p id="statusMessage" class="status-text"></p>
+          </div>
+          <section id="productGrid" class="product-grid"></section>
+        </div>
+      </section>
     </main>
+
+    <dialog id="productModal" class="product-modal">
+      <button id="closeModalButton" class="modal-close" type="button" aria-label="Close">x</button>
+      <div class="modal-content">
+        <img id="modalImage" alt="" />
+        <div class="modal-copy">
+          <p id="modalCategory" class="section-kicker"></p>
+          <h3 id="modalName"></h3>
+          <p id="modalDescription"></p>
+          <div class="modal-meta">
+            <strong id="modalPrice"></strong>
+            <span id="modalRating"></span>
+          </div>
+          <p id="modalInventory" class="results-info"></p>
+          <div class="modal-actions">
+            <button id="modalCartButton" class="primary-btn" type="button">Add to cart</button>
+            <button id="modalWishlistButton" class="secondary-btn" type="button">Save to wishlist</button>
+          </div>
+        </div>
+      </div>
+    </dialog>
 
     <template id="productTemplate">
       <article class="product-card">
         <div class="card-image-wrap">
           <span class="badge"></span>
+          <button type="button" class="wishlist-btn" aria-label="Toggle wishlist">♡</button>
           <img alt="" loading="lazy" />
         </div>
         <div class="card-body">
@@ -90,7 +197,10 @@
             <span class="rating"></span>
             <strong class="price"></strong>
           </div>
-          <button type="button" class="add-btn">Add to Cart</button>
+          <div class="card-actions">
+            <button type="button" class="secondary-btn quick-view-btn">Quick View</button>
+            <button type="button" class="add-btn">Add to Cart</button>
+          </div>
         </div>
       </article>
     </template>

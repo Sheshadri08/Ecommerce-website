@@ -4,15 +4,14 @@ const User = require("./models/user");
 const { catalog } = require("./routes/data/catalog");
 
 async function seedProducts() {
-  const existingProducts = await Product.countDocuments({});
+  const existingProducts = await Product.find({}, { name: 1, category: 1 }).lean();
+  const existingKeys = new Set(
+    existingProducts.map((product) => `${product.name.toLowerCase()}::${product.category.toLowerCase()}`)
+  );
 
-  if (existingProducts > 0) {
-    console.log(`Skipping product seed. Found ${existingProducts} existing products.`);
-    return;
-  }
-
-  await Product.insertMany(
-    catalog.map((product) => ({
+  const productsToInsert = catalog
+    .filter((product) => !existingKeys.has(`${product.name.toLowerCase()}::${product.category.toLowerCase()}`))
+    .map((product) => ({
       name: product.name,
       category: product.category,
       price: product.price,
@@ -22,10 +21,19 @@ async function seedProducts() {
       badge: product.badge || "",
       inventory: product.inventory ?? 12,
       featured: Boolean(product.badge),
-    }))
-  );
+    }));
 
-  console.log(`Seeded ${catalog.length} products.`);
+  if (!productsToInsert.length) {
+    console.log(`Catalog already synced. Found ${existingProducts.length} products.`);
+    return;
+  }
+
+  await Product.insertMany(productsToInsert);
+  console.log(
+    `Inserted ${productsToInsert.length} new products. Total catalog size: ${
+      existingProducts.length + productsToInsert.length
+    }.`
+  );
 }
 
 async function seedAdmin() {
