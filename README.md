@@ -1,51 +1,60 @@
 # NovaCart Deployment
 
-This project is ready to be deployed from GitHub with Render.
+This repo has two valid ways to run:
 
-## What works
+- Full stack on one Node server with `backend/server.js`
+- Static GitHub Pages frontend connected to a separately deployed backend
 
-- The Node server starts from `backend/server.js`
-- The frontend is served by Express from the same app
-- The deploy config already exists in `render.yaml`
-- The health endpoint is available at `/health`
+## Important note
 
-## Deploy from GitHub
+GitHub Pages cannot run the Express backend.
 
-1. Push this project to your GitHub repository:
+- `https://sheshadri08.github.io/Ecommerce-website/` only hosts static files
+- The API must run on Render, Railway, or another Node host
 
-```powershell
-git add .
-git commit -m "Prepare app for deployment"
-git push origin main
-```
+## Deploy the backend
 
-2. Open Render and choose **New +** -> **Blueprint**.
-3. Select your GitHub repo: `Sheshadri08/Ecommerce-website`
-4. Render will detect `render.yaml` automatically.
-5. Add the required environment values in Render:
+1. Push the repository to GitHub.
+2. In Render, choose **New +** -> **Blueprint**.
+3. Select `Sheshadri08/Ecommerce-website`.
+4. Render will detect `render.yaml`.
+5. Set these environment variables in Render:
 
 - `MONGODB_URI`
 - `ADMIN_PASSWORD`
 - `ADMIN_TOKEN_SECRET`
 
-## Important note
+After deployment, verify:
 
-GitHub itself cannot host this Node/Express server directly.
+- Storefront API health: `https://<your-render-service>.onrender.com/health`
+- Admin app on backend: `https://<your-render-service>.onrender.com/admin`
 
-- GitHub Pages only serves static files
-- Render can deploy the full backend + frontend from your GitHub repo
+## Connect GitHub Pages to the backend
 
-## After deployment
+The static Pages site now supports an `api` query parameter and remembers it in `localStorage`.
 
-- Storefront: `https://<your-render-service>.onrender.com/`
-- Admin: `https://<your-render-service>.onrender.com/admin`
-- Health check: `https://<your-render-service>.onrender.com/health`
+Example:
+
+```text
+https://sheshadri08.github.io/Ecommerce-website/?api=https://<your-render-service>.onrender.com
+```
+
+Admin example:
+
+```text
+https://sheshadri08.github.io/Ecommerce-website/admin/?api=https://<your-render-service>.onrender.com
+```
+
+Once opened once, the Pages frontend will keep using that backend URL in the browser.
 
 ## Local run
 
-Create a `.env` file from `.env.example`, then run:
+1. Create a `.env` file from `.env.example`
+2. Start MongoDB locally or provide `MONGODB_URI`
+3. Run:
 
 ```powershell
 npm install
+npm run seed
 npm start
 ```

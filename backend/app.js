@@ -9,6 +9,8 @@ const adminRoutes = require("./routes/adminroutes");
 
 function createApp() {
   const app = express();
+  const frontendPath = path.join(__dirname, "..", "frontend");
+  const adminPath = path.join(__dirname, "..", "admin");
 
   app.use(cors());
   app.use(express.json());
@@ -18,20 +20,25 @@ function createApp() {
   app.use("/api/users", userRoutes);
   app.use("/api/admin", adminRoutes);
 
-  app.use(express.static(path.join(__dirname, "..", "frontend")));
+  app.use(express.static(frontendPath));
+  app.use("/frontend", express.static(frontendPath));
   app.use(
     "/admin",
-    express.static(path.join(__dirname, "..", "admin"), {
+    express.static(adminPath, {
       index: false,
     })
   );
 
   app.get("/", (req, res) => {
-    res.sendFile(path.join(__dirname, "..", "frontend", "index.html"));
+    res.sendFile(path.join(frontendPath, "index.html"));
   });
 
   app.get("/admin", (req, res) => {
-    res.sendFile(path.join(__dirname, "..", "admin", "admin.html"));
+    res.sendFile(path.join(adminPath, "admin.html"));
+  });
+
+  app.get("/admin/", (req, res) => {
+    res.sendFile(path.join(adminPath, "admin.html"));
   });
 
   app.get("/health", (req, res) => {

@@ -10,7 +10,7 @@
       href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="/style.css" />
+    <link rel="stylesheet" href="../frontend/style.css" />
     <link rel="stylesheet" href="style.css" />
   </head>
   <body>
@@ -26,7 +26,7 @@
         <input id="adminSearch" type="search" placeholder="Search product table..." />
       </div>
       <div class="header-actions">
-        <a class="ghost-link" href="/">Storefront</a>
+        <a class="ghost-link" data-store-link href="../frontend/index.html">Storefront</a>
         <button id="logoutButton" class="secondary-btn" type="button">Log Out</button>
       </div>
     </header>
@@ -167,6 +167,7 @@
       </section>
     </main>
 
+    <script src="config.js"></script>
     <script src="app.js"></script>
   </body>
 </html>

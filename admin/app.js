@@ -1,4 +1,7 @@
 const ADMIN_TOKEN_KEY = "novacart_admin_token";
+const CONFIG = window.NOVACART_CONFIG || {};
+const API_BASE_URL = (CONFIG.API_BASE_URL || "").replace(/\/$/, "");
+const STOREFRONT_URL = CONFIG.STOREFRONT_URL || (API_BASE_URL ? `${API_BASE_URL}/` : "");
 
 const state = {
   token: localStorage.getItem(ADMIN_TOKEN_KEY) || "",
@@ -21,8 +24,12 @@ function setMessage(id, message, isError = false) {
   element.classList.toggle("status-error", isError);
 }
 
+function apiUrl(path) {
+  return API_BASE_URL ? `${API_BASE_URL}${path}` : path;
+}
+
 function adminFetch(url, options = {}) {
-  return fetch(url, {
+  return fetch(apiUrl(url), {
     ...options,
     headers: {
       "Content-Type": "application/json",
@@ -217,7 +224,7 @@ function renderOverview(data) {
 
 async function loadBootstrapHint() {
   try {
-    const response = await fetch("/api/users/bootstrap");
+    const response = await fetch(apiUrl("/api/users/bootstrap"));
     if (!response.ok) return;
     const data = await response.json();
     document.getElementById("credentialHint").textContent =
@@ -228,7 +235,7 @@ async function loadBootstrapHint() {
 }
 
 async function loadProducts() {
-  const response = await fetch("/api/products?limit=120");
+  const response = await fetch(apiUrl("/api/products?limit=120"));
   if (!response.ok) throw new Error("Could not load products");
 
   const data = await response.json();
@@ -299,7 +306,7 @@ async function handleLogin(event) {
 
   try {
     setMessage("loginMessage", "Signing in...");
-    const response = await fetch("/api/users/login", {
+    const response = await fetch(apiUrl("/api/users/login"), {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
@@ -380,6 +387,12 @@ function logout() {
 }
 
 function wireEvents() {
+  document.querySelectorAll("[data-store-link]").forEach((link) => {
+    if (STOREFRONT_URL) {
+      link.href = STOREFRONT_URL;
+    }
+  });
+
   document.getElementById("loginForm").addEventListener("submit", handleLogin);
   document.getElementById("productForm").addEventListener("submit", handleProductSubmit);
   document.getElementById("adminSearch").addEventListener("input", renderProductsTable);
