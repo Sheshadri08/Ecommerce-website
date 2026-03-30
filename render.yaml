@@ -5,6 +5,7 @@ services:
     plan: free
     buildCommand: npm install
     startCommand: node backend/server.js
+    healthCheckPath: /health
     autoDeploy: true
     envVars:
       - key: NODE_VERSION
