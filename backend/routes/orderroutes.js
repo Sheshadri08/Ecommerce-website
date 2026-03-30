@@ -2,6 +2,7 @@ const router = require("express").Router();
 const Order = require("../models/order");
 const Product = require("../models/product");
 const adminAuth = require("../middleware/adminAuth");
+const mongoose = require("mongoose");
 
 const PAYMENT_METHOD_LABELS = {
   cash_on_delivery: "Cash on Delivery",
@@ -35,6 +36,33 @@ function normalizeOrder(orderDoc) {
     updatedAt: orderDoc.updatedAt,
   };
 }
+
+router.get("/track/:id", async (req, res) => {
+  const orderId = String(req.params.id || "").trim();
+  const customerEmail = String(req.query.email || "")
+    .trim()
+    .toLowerCase();
+
+  if (!orderId || !customerEmail) {
+    return res.status(400).json({ message: "Order ID and customer email are required" });
+  }
+
+  if (!mongoose.isValidObjectId(orderId)) {
+    return res.status(404).json({ message: "Order not found" });
+  }
+
+  try {
+    const order = await Order.findById(orderId);
+
+    if (!order || String(order.customerEmail || "").toLowerCase() !== customerEmail) {
+      return res.status(404).json({ message: "Order not found for those details" });
+    }
+
+    return res.json(normalizeOrder(order));
+  } catch (error) {
+    return res.status(500).json({ message: "Could not load order details" });
+  }
+});
 
 router.get("/", adminAuth, async (req, res) => {
   try {

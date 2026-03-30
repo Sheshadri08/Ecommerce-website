@@ -235,6 +235,7 @@ select,
 .promo-card,
 .product-card,
 .order-summary,
+.track-help-card,
 .cart-item,
 .empty-state,
 .panel,
@@ -597,6 +598,60 @@ select,
   padding: 11px 14px;
   margin-top: 10px;
   background: var(--surface-2);
+}
+
+.track-hero {
+  padding: 0 0 18px;
+}
+
+.track-help-card {
+  padding: 22px;
+  background: rgba(255, 247, 241, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  color: #fff7f1;
+}
+
+.track-layout {
+  align-items: start;
+}
+
+.track-panel {
+  padding: 20px;
+}
+
+.track-result {
+  display: grid;
+  gap: 14px;
+}
+
+.track-status-pill {
+  display: inline-flex;
+  width: fit-content;
+  padding: 8px 12px;
+  border-radius: 999px;
+  background: var(--brand-soft);
+  color: var(--brand-dark);
+  font-weight: 700;
+  text-transform: capitalize;
+}
+
+.track-block strong {
+  display: block;
+  margin-bottom: 8px;
+}
+
+.track-block p {
+  margin: 6px 0;
+  overflow-wrap: anywhere;
+}
+
+.order-item-list {
+  margin: 0;
+  padding-left: 18px;
+}
+
+.order-item-list li {
+  margin: 6px 0;
 }
 
 .empty-state {

@@ -1,8 +1,10 @@
 const CART_KEY = "novacart_cart_v1";
 const WISHLIST_KEY = "novacart_wishlist_v1";
+const DEMO_PRODUCTS_KEY = "novacart_demo_products_v1";
 const CONFIG = window.NOVACART_CONFIG || {};
 const API_BASE_URL = (CONFIG.API_BASE_URL || "").replace(/\/$/, "");
 const ADMIN_URL = CONFIG.ADMIN_URL || (API_BASE_URL ? `${API_BASE_URL}/admin` : "/admin");
+const FALLBACK_CATALOG = Array.isArray(window.NOVACART_FALLBACK_CATALOG) ? window.NOVACART_FALLBACK_CATALOG : [];
 
 const state = {
   allProducts: [],
@@ -50,6 +52,64 @@ function saveWishlist(ids) {
 
 function isWishlisted(productId) {
   return getWishlist().includes(productId);
+}
+
+function getDemoProducts() {
+  const storedProducts = JSON.parse(localStorage.getItem(DEMO_PRODUCTS_KEY) || "null");
+  if (Array.isArray(storedProducts) && storedProducts.length) {
+    return storedProducts;
+  }
+
+  const seededProducts = FALLBACK_CATALOG.map((product) => ({
+    ...product,
+    inventory: Number(product.inventory ?? 12),
+    featured: Boolean(product.featured ?? product.badge),
+  }));
+  localStorage.setItem(DEMO_PRODUCTS_KEY, JSON.stringify(seededProducts));
+  return seededProducts;
+}
+
+function getDemoCategories(products) {
+  return [...new Set(products.map((product) => product.category))].sort((left, right) => left.localeCompare(right));
+}
+
+function applyClientFilters(products) {
+  let filteredProducts = [...products];
+
+  if (state.searchTerm.trim()) {
+    const searchTerm = state.searchTerm.trim().toLowerCase();
+    filteredProducts = filteredProducts.filter((product) =>
+      [product.name, product.description, product.category].join(" ").toLowerCase().includes(searchTerm)
+    );
+  }
+
+  if (state.activeCategory !== "All") {
+    filteredProducts = filteredProducts.filter((product) => product.category === state.activeCategory);
+  }
+
+  filteredProducts = filteredProducts.filter((product) => product.price >= state.minPrice);
+
+  if (Number.isFinite(state.maxPrice)) {
+    filteredProducts = filteredProducts.filter((product) => product.price <= state.maxPrice);
+  }
+
+  filteredProducts.sort((left, right) => {
+    if (state.sort === "price-asc") return left.price - right.price;
+    if (state.sort === "price-desc") return right.price - left.price;
+    if (state.sort === "rating") return right.rating - left.rating;
+    if (state.sort === "name") return left.name.localeCompare(right.name);
+    return String(right.id).localeCompare(String(left.id));
+  });
+
+  if (state.featuredOnly) {
+    filteredProducts = filteredProducts.filter((product) => product.badge || product.rating >= 4.5);
+  }
+
+  if (state.inStockOnly) {
+    filteredProducts = filteredProducts.filter((product) => product.inventory > 0);
+  }
+
+  return filteredProducts;
 }
 
 function updateCartCount() {
@@ -167,7 +227,7 @@ function createProductCard(product) {
     button.textContent = "Sold Out";
   }
 
-  wishlistButton.textContent = isWishlisted(product.id) ? "♥" : "♡";
+  wishlistButton.textContent = isWishlisted(product.id) ? "\u2665" : "\u2661";
   wishlistButton.classList.toggle("active", isWishlisted(product.id));
 
   button.addEventListener("click", () => addToCart(product));
@@ -307,49 +367,65 @@ function buildSearchParams() {
 }
 
 async function loadInitialProducts() {
-  const response = await fetch(apiUrl("/api/products?limit=120"));
+  try {
+    const response = await fetch(apiUrl("/api/products?limit=120"));
+    if (!response.ok) {
+      throw new Error("Could not load products");
+    }
 
-  if (!response.ok) {
-    throw new Error("Could not load products");
+    const data = await response.json();
+    state.allProducts = data.products || [];
+    state.categories = data.categories || [];
+  } catch (error) {
+    state.allProducts = getDemoProducts();
+    state.categories = getDemoCategories(state.allProducts);
   }
-
-  const data = await response.json();
-  state.allProducts = data.products || [];
-  state.categories = data.categories || [];
 }
 
 async function loadProducts() {
   setStatusMessage("Loading products...");
-  const response = await fetch(apiUrl(`/api/products?${buildSearchParams().toString()}`));
 
-  if (!response.ok) {
-    throw new Error("Could not load products");
+  try {
+    const response = await fetch(apiUrl(`/api/products?${buildSearchParams().toString()}`));
+    if (!response.ok) {
+      throw new Error("Could not load products");
+    }
+
+    const data = await response.json();
+    state.products = data.products || [];
+    state.categories = data.categories || state.categories;
+
+    if (state.featuredOnly) {
+      state.products = state.products.filter((product) => product.badge || product.rating >= 4.5);
+    }
+
+    if (state.inStockOnly) {
+      state.products = state.products.filter((product) => product.inventory > 0);
+    }
+
+    document.getElementById("heroProductCount").textContent = String(state.allProducts.length || data.total || 0);
+    document.getElementById("heroCategoryCount").textContent = String(state.categories.length);
+    document.getElementById("heroDealCount").textContent = String(
+      state.allProducts.filter((product) => product.badge).length
+    );
+    setStatusMessage("Catalog synced.");
+  } catch (error) {
+    state.allProducts = getDemoProducts();
+    state.categories = getDemoCategories(state.allProducts);
+    state.products = applyClientFilters(state.allProducts);
+    document.getElementById("heroProductCount").textContent = String(state.allProducts.length);
+    document.getElementById("heroCategoryCount").textContent = String(state.categories.length);
+    document.getElementById("heroDealCount").textContent = String(
+      state.allProducts.filter((product) => product.badge).length
+    );
+    setStatusMessage("Catalog loaded in GitHub demo mode.");
   }
-
-  const data = await response.json();
-  state.products = data.products || [];
-  state.categories = data.categories || state.categories;
-
-  if (state.featuredOnly) {
-    state.products = state.products.filter((product) => product.badge || product.rating >= 4.5);
-  }
-
-  if (state.inStockOnly) {
-    state.products = state.products.filter((product) => product.inventory > 0);
-  }
-
-  document.getElementById("heroProductCount").textContent = String(state.allProducts.length || data.total || 0);
-  document.getElementById("heroCategoryCount").textContent = String(state.categories.length);
-  document.getElementById("heroDealCount").textContent = String(
-    state.allProducts.filter((product) => product.badge).length
-  );
 
   renderCategoryChips();
   renderFeaturedRail();
   renderWishlistRail();
   renderProducts(state.products);
   updateWishlistSummary();
-  setStatusMessage("Catalog synced.");
 }
 
 function resetFilters() {
@@ -371,7 +447,7 @@ function resetFilters() {
   renderCategoryChips();
   loadProducts().catch(() => {
     document.getElementById("resultsInfo").textContent = "Unable to load products.";
-    setStatusMessage("Start backend server and refresh.", true);
+    setStatusMessage("Could not refresh the catalog.", true);
   });
 }
 
@@ -380,7 +456,7 @@ function queueProductReload() {
   searchTimer = window.setTimeout(() => {
     loadProducts().catch(() => {
       document.getElementById("resultsInfo").textContent = "Unable to load products.";
-      setStatusMessage("Start backend server and refresh.", true);
+      setStatusMessage("Could not refresh the catalog.", true);
     });
   }, 180);
 }
@@ -452,7 +528,7 @@ async function init() {
     await loadProducts();
   } catch (error) {
     document.getElementById("resultsInfo").textContent = "Unable to load products.";
-    setStatusMessage("Start backend server and refresh.", true);
+    setStatusMessage("Catalog unavailable.", true);
   }
 }
 
