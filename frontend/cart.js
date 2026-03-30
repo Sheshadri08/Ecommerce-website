@@ -1,4 +1,7 @@
-﻿const CART_KEY = "novacart_cart_v1";
+const CART_KEY = "novacart_cart_v1";
+const CONFIG = window.NOVACART_CONFIG || {};
+const API_BASE_URL = (CONFIG.API_BASE_URL || "").replace(/\/$/, "");
+const ADMIN_URL = CONFIG.ADMIN_URL || (API_BASE_URL ? `${API_BASE_URL}/admin` : "/admin");
 
 function formatPrice(value) {
   return new Intl.NumberFormat("en-IN", {
@@ -6,6 +9,10 @@ function formatPrice(value) {
     currency: "INR",
     maximumFractionDigits: 0,
   }).format(value);
+}
+
+function apiUrl(path) {
+  return API_BASE_URL ? `${API_BASE_URL}${path}` : path;
 }
 
 function getCart() {
@@ -107,21 +114,27 @@ async function placeOrder(event) {
 
   const customerName = document.getElementById("customerName").value.trim();
   const customerEmail = document.getElementById("customerEmail").value.trim();
+  const customerPhone = document.getElementById("customerPhone").value.trim();
+  const customerAddress = document.getElementById("customerAddress").value.trim();
+  const paymentMethod = document.getElementById("paymentMethod").value;
 
-  if (!customerName || !customerEmail) {
-    message.textContent = "Please enter your name and email.";
+  if (!customerName || !customerEmail || !customerPhone || !customerAddress || !paymentMethod) {
+    message.textContent = "Please complete your contact details, address, and payment option.";
     return;
   }
 
   try {
     checkoutButton.disabled = true;
     message.textContent = "Submitting your order...";
-    const response = await fetch("/api/orders", {
+    const response = await fetch(apiUrl("/api/orders"), {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         customerName,
         customerEmail,
+        customerPhone,
+        customerAddress,
+        paymentMethod,
         items: cart.map((item) => ({ id: item.id, quantity: item.quantity })),
       }),
     });
@@ -135,7 +148,7 @@ async function placeOrder(event) {
     localStorage.removeItem(CART_KEY);
     document.getElementById("checkoutForm").reset();
     render();
-    message.textContent = `Order ${order.id.slice(-6).toUpperCase()} confirmed. Total ${formatPrice(order.total)}.`;
+    message.textContent = `Order ${order.id.slice(-6).toUpperCase()} confirmed via ${order.paymentMethodLabel}. Total ${formatPrice(order.total)}.`;
   } catch (error) {
     message.textContent = error.message || "Could not place order. Please try again.";
   } finally {
@@ -150,6 +163,10 @@ function render() {
 }
 
 function setup() {
+  document.querySelectorAll("[data-admin-link]").forEach((link) => {
+    link.href = ADMIN_URL;
+  });
+
   render();
 
   document.getElementById("checkoutForm").addEventListener("submit", placeOrder);

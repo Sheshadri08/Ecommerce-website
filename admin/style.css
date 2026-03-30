@@ -143,6 +143,11 @@
   margin: 6px 0;
 }
 
+.selected-order p {
+  margin: 8px 0;
+  overflow-wrap: anywhere;
+}
+
 .status-select {
   min-width: 130px;
   padding: 8px 10px;

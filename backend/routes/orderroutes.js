@@ -3,11 +3,22 @@ const Order = require("../models/order");
 const Product = require("../models/product");
 const adminAuth = require("../middleware/adminAuth");
 
+const PAYMENT_METHOD_LABELS = {
+  cash_on_delivery: "Cash on Delivery",
+  upi: "UPI",
+  card: "Debit / Credit Card",
+  net_banking: "Net Banking",
+};
+
 function normalizeOrder(orderDoc) {
   return {
     id: String(orderDoc._id),
     customerName: orderDoc.customerName,
     customerEmail: orderDoc.customerEmail,
+    customerPhone: orderDoc.customerPhone,
+    customerAddress: orderDoc.customerAddress,
+    paymentMethod: orderDoc.paymentMethod,
+    paymentMethodLabel: PAYMENT_METHOD_LABELS[orderDoc.paymentMethod] || orderDoc.paymentMethod,
     items: orderDoc.items.map((item) => ({
       product: String(item.product),
       name: item.name,
@@ -38,10 +49,22 @@ router.get("/", adminAuth, async (req, res) => {
 });
 
 router.post("/", async (req, res) => {
-  const { customerName, customerEmail, items } = req.body;
+  const { customerName, customerEmail, customerPhone, customerAddress, paymentMethod, items } = req.body;
 
-  if (!customerName || !customerEmail || !Array.isArray(items) || items.length === 0) {
+  if (
+    !customerName ||
+    !customerEmail ||
+    !customerPhone ||
+    !customerAddress ||
+    !paymentMethod ||
+    !Array.isArray(items) ||
+    items.length === 0
+  ) {
     return res.status(400).json({ message: "Please provide customer details and items" });
+  }
+
+  if (!Object.hasOwn(PAYMENT_METHOD_LABELS, paymentMethod)) {
+    return res.status(400).json({ message: "Please choose a valid payment option" });
   }
 
   try {
@@ -81,6 +104,9 @@ router.post("/", async (req, res) => {
     const order = await Order.create({
       customerName,
       customerEmail,
+      customerPhone,
+      customerAddress,
+      paymentMethod,
       items: normalizedItems,
       subtotal,
       shipping,

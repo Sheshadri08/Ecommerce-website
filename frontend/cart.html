@@ -25,7 +25,7 @@
         <input type="text" disabled value="Secure order summary" />
       </div>
       <div class="header-actions">
-        <a class="ghost-link" href="/admin">Admin Panel</a>
+        <a class="ghost-link" data-admin-link href="/admin">Admin Panel</a>
         <a class="cart-link" href="index.html">Continue Shopping</a>
       </div>
     </header>
@@ -52,6 +52,15 @@
           <form id="checkoutForm" class="checkout-form">
             <input id="customerName" placeholder="Your name" required />
             <input id="customerEmail" type="email" placeholder="Your email" required />
+            <input id="customerPhone" type="tel" placeholder="Phone number" required />
+            <textarea id="customerAddress" placeholder="Delivery address" rows="3" required></textarea>
+            <select id="paymentMethod" required>
+              <option value="">Select payment option</option>
+              <option value="cash_on_delivery">Cash on Delivery</option>
+              <option value="upi">UPI</option>
+              <option value="card">Debit / Credit Card</option>
+              <option value="net_banking">Net Banking</option>
+            </select>
             <button id="checkoutButton" class="primary-btn" type="submit">Place Order</button>
           </form>
 
@@ -61,6 +70,7 @@
       </div>
     </main>
 
+    <script src="config.js"></script>
     <script src="cart.js"></script>
   </body>
 </html>

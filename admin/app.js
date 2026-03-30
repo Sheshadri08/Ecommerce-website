@@ -122,6 +122,9 @@ function renderSelectedOrder() {
   card.innerHTML = `
     <strong>${order.customerName}</strong>
     <p class="results-info">${order.customerEmail}</p>
+    <p class="results-info">${order.customerPhone}</p>
+    <p><strong>Address:</strong> ${order.customerAddress}</p>
+    <p><strong>Payment:</strong> ${order.paymentMethodLabel}</p>
     <p class="results-info">Placed ${new Date(order.createdAt).toLocaleString()}</p>
     <p><strong>Total:</strong> ${formatPrice(order.total)}</p>
     <p><strong>Status:</strong> ${order.status}</p>
@@ -217,7 +220,8 @@ async function loadBootstrapHint() {
     const response = await fetch("/api/users/bootstrap");
     if (!response.ok) return;
     const data = await response.json();
-    document.getElementById("credentialHint").textContent = `${data.defaultAdminEmail} / Admin@123`;
+    document.getElementById("credentialHint").textContent =
+      `${data.defaultAdminEmail} / ${data.defaultAdminPassword}`;
   } catch (error) {
     // Non-blocking hint.
   }
