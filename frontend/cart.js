@@ -1,8 +1,8 @@
-const CART_KEY = "fruitstock_cart_v1";
-const DEMO_PRODUCTS_KEY = "fruitstock_demo_products_v1";
-const DEMO_ORDERS_KEY = "fruitstock_demo_orders_v1";
-const LAST_ORDER_KEY = "fruitstock_last_order_lookup_v1";
-const CUSTOMER_SESSION_KEY = "fruitstock_customer_session_v1";
+const CART_KEY = "novacart_cart_v1";
+const DEMO_PRODUCTS_KEY = "novacart_demo_products_v1";
+const DEMO_ORDERS_KEY = "novacart_demo_orders_v1";
+const LAST_ORDER_KEY = "novacart_last_order_lookup_v1";
+const CUSTOMER_SESSION_KEY = "novacart_customer_session_v1";
 const CONFIG = window.NOVACART_CONFIG || {};
 const API_BASE_URL = (CONFIG.API_BASE_URL || "").replace(/\/$/, "");
 const ADMIN_URL = CONFIG.ADMIN_URL || (API_BASE_URL ? `${API_BASE_URL}/admin/` : "/admin/");
@@ -133,9 +133,9 @@ function renderCartList(cart) {
   if (!cart.length) {
     list.innerHTML = `
       <div class="empty-state">
-        <h3>Your fruit cart is empty</h3>
-        <p>Add a few fresh listings and come back when you are ready to check out.</p>
-        <a href="index.html" class="cart-link">Shop Fruit</a>
+        <h3>Your NovaCart cart is empty</h3>
+        <p>Add a few products and come back when you are ready to check out.</p>
+        <a href="index.html" class="cart-link">Shop NovaCart</a>
       </div>
     `;
     return;
@@ -176,7 +176,7 @@ function placeDemoOrder(payload) {
   const items = payload.items.map((item) => {
     const product = productMap.get(item.id);
     if (!product) {
-      throw new Error("One or more fruit listings are no longer available.");
+      throw new Error("One or more product listings are no longer available.");
     }
 
     const quantity = Math.max(1, Number(item.quantity || 1));
@@ -233,7 +233,7 @@ async function placeOrder(event) {
   const checkoutButton = document.getElementById("checkoutButton");
 
   if (!cart.length) {
-    message.textContent = "Your fruit cart is empty.";
+    message.textContent = "Your cart is empty.";
     return;
   }
 
@@ -250,7 +250,7 @@ async function placeOrder(event) {
 
   try {
     checkoutButton.disabled = true;
-    message.textContent = "Submitting your fruit order...";
+    message.textContent = "Submitting your NovaCart order...";
 
     const payload = {
       customerName,

@@ -1,6 +1,6 @@
-const CART_KEY = "fruitstock_cart_v1";
-const WISHLIST_KEY = "fruitstock_watchlist_v1";
-const DEMO_PRODUCTS_KEY = "fruitstock_demo_products_v1";
+const CART_KEY = "novacart_cart_v1";
+const WISHLIST_KEY = "novacart_watchlist_v1";
+const DEMO_PRODUCTS_KEY = "novacart_demo_products_v1";
 const CONFIG = window.NOVACART_CONFIG || {};
 const API_BASE_URL = (CONFIG.API_BASE_URL || "").replace(/\/$/, "");
 const ADMIN_URL = CONFIG.ADMIN_URL || (API_BASE_URL ? `${API_BASE_URL}/admin/` : "/admin/");
@@ -130,7 +130,7 @@ function setStatusMessage(message, isError = false) {
 
 function addToCart(product) {
   if (product.inventory <= 0) {
-    setStatusMessage("This fruit lot is sold out right now.", true);
+    setStatusMessage("This item is sold out right now.", true);
     return;
   }
 
@@ -151,7 +151,7 @@ function addToCart(product) {
 
   saveCart(cart);
   updateCartCount();
-  setStatusMessage(`${product.name} added to your fruit cart.`);
+  setStatusMessage(`${product.name} added to your cart.`);
 }
 
 function toggleWishlist(productId) {
@@ -248,12 +248,12 @@ function renderProducts(products) {
   const info = document.getElementById("resultsInfo");
   grid.innerHTML = "";
 
-  info.textContent = `Showing ${products.length} fruit listing${products.length !== 1 ? "s" : ""}`;
+  info.textContent = `Showing ${products.length} product listing${products.length !== 1 ? "s" : ""}`;
 
   if (!products.length) {
     grid.innerHTML = `
       <div class="empty-state">
-        <h3>No fruit listings match this filter</h3>
+        <h3>No product listings match this filter</h3>
         <p>Try another category, wider price range, or remove the featured-only filter.</p>
       </div>
     `;
@@ -452,7 +452,7 @@ function resetFilters() {
 
   renderCategoryChips();
   loadProducts().catch(() => {
-    document.getElementById("resultsInfo").textContent = "Unable to load fruit listings.";
+    document.getElementById("resultsInfo").textContent = "Unable to load product listings.";
     setStatusMessage("Could not refresh the stock board.", true);
   });
 }
@@ -461,7 +461,7 @@ function queueProductReload() {
   window.clearTimeout(searchTimer);
   searchTimer = window.setTimeout(() => {
     loadProducts().catch(() => {
-      document.getElementById("resultsInfo").textContent = "Unable to load fruit listings.";
+      document.getElementById("resultsInfo").textContent = "Unable to load product listings.";
       setStatusMessage("Could not refresh the stock board.", true);
     });
   }, 180);
@@ -533,7 +533,7 @@ async function init() {
     await loadInitialProducts();
     await loadProducts();
   } catch (error) {
-    document.getElementById("resultsInfo").textContent = "Unable to load fruit listings.";
+    document.getElementById("resultsInfo").textContent = "Unable to load product listings.";
     setStatusMessage("Stock board unavailable.", true);
   }
 }
