@@ -37,7 +37,7 @@ async function seedProducts() {
 }
 
 async function seedAdmin() {
-  const adminEmail = (process.env.ADMIN_EMAIL || "25bcaf61@kristujaynti.com").toLowerCase();
+  const adminEmail = (process.env.ADMIN_EMAIL || "admin@gmail.com").toLowerCase();
   const adminPassword = process.env.ADMIN_PASSWORD || "1234567890";
   const adminName = process.env.ADMIN_NAME || "NovaCart Admin";
 

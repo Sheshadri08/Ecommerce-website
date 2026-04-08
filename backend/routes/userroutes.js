@@ -13,7 +13,7 @@ router.get("/bootstrap", async (req, res) => {
   const adminCount = await User.countDocuments({ isAdmin: true });
   return res.json({
     hasAdmin: adminCount > 0,
-    defaultAdminEmail: process.env.ADMIN_EMAIL || "25bcaf61@kristujaynti.com",
+    defaultAdminEmail: process.env.ADMIN_EMAIL || "admin@gmail.com",
     defaultAdminPassword: process.env.ADMIN_PASSWORD || "1234567890",
   });
 });

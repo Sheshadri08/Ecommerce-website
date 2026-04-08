@@ -17,7 +17,7 @@ services:
       - key: ADMIN_NAME
         value: NovaCart Admin
       - key: ADMIN_EMAIL
-        value: 25bcaf61@kristujaynti.com
+        value: admin@gmail.com
       - key: ADMIN_PASSWORD
         value: 1234567890
       - key: ADMIN_TOKEN_SECRET

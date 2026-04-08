@@ -6,7 +6,7 @@ const CONFIG = window.NOVACART_CONFIG || {};
 const API_BASE_URL = (CONFIG.API_BASE_URL || "").replace(/\/$/, "");
 const STOREFRONT_URL = CONFIG.STOREFRONT_URL || (API_BASE_URL ? `${API_BASE_URL}/` : "");
 const FALLBACK_CATALOG = Array.isArray(window.NOVACART_FALLBACK_CATALOG) ? window.NOVACART_FALLBACK_CATALOG : [];
-const DEFAULT_ADMIN_EMAIL = "25bcaf61@kristujaynti.com";
+const DEFAULT_ADMIN_EMAIL = "admin@gmail.com";
 const DEFAULT_ADMIN_PASSWORD = "1234567890";
 
 const state = {
