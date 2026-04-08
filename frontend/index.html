@@ -13,22 +13,16 @@
     <link rel="stylesheet" href="style.css" />
   </head>
   <body>
-    <div class="top-strip">
-      <span>Free delivery on orders above INR 1499</span>
-      <span>Secure checkout with live order tracking</span>
-      <span id="wishlistSummary">Watchlist 0</span>
-    </div>
-
     <header class="site-header">
       <div class="brand-wrap">
         <span class="brand-dot"></span>
         <div>
           <h1>NovaCart</h1>
-          <p class="header-subtitle">Fresh essentials and premium picks</p>
+          <p class="header-subtitle">Delivering value every day</p>
         </div>
       </div>
       <div class="search-wrap">
-        <input id="searchInput" type="search" placeholder="Search fruits, snacks, pantry items, gift packs..." />
+        <input id="searchInput" type="search" placeholder="Search groceries, fruit boxes, pantry items, snacks..." />
       </div>
       <div class="header-actions">
         <select id="sortSelect" aria-label="Sort products">
@@ -45,83 +39,99 @@
       </div>
     </header>
 
+    <div class="top-strip">
+      <span>Free delivery above INR 1499</span>
+      <span>Daily deals and featured picks</span>
+      <span>Track every order</span>
+      <span id="wishlistSummary">Watchlist 0</span>
+    </div>
+
+    <nav class="market-nav" aria-label="Shopping shortcuts">
+      <button id="jumpCatalogButton" class="market-nav-link market-nav-link-strong" type="button">All products</button>
+      <button id="jumpDealsButton" class="market-nav-link" type="button">Today's deals</button>
+      <span class="market-nav-text">Fresh fruit</span>
+      <span class="market-nav-text">Pantry staples</span>
+      <span class="market-nav-text">Gift packs</span>
+      <span class="market-nav-text">Best sellers</span>
+    </nav>
+
     <section class="hero">
       <div class="hero-content">
         <div class="hero-copy">
-          <p class="hero-tag">Fresh arrivals</p>
-          <h2>Fresh shopping made simple, fast, and beautifully organized.</h2>
+          <p class="hero-tag">Seasonal savings</p>
+          <h2>Shop fresh picks, pantry favorites, and everyday essentials in one place.</h2>
           <p>
-            Discover everyday essentials, seasonal favorites, and premium picks in one clean storefront built for easy browsing and quick checkout.
+            Find value picks, premium bundles, and customer favorites with a storefront designed for quick search, easy comparison, and fast checkout.
           </p>
           <div class="hero-badges">
-            <span>Best sellers updated daily</span>
-            <span>Live stock visibility</span>
-            <span>Fast checkout flow</span>
+            <span>Great prices</span>
+            <span>Fast reorder flow</span>
+            <span>Saved favorites</span>
           </div>
           <div class="hero-cta-row">
-            <button id="jumpCatalogButton" class="cart-link" type="button">Shop now</button>
-            <button id="jumpDealsButton" class="ghost-link" type="button">View best sellers</button>
+            <button class="cart-link" type="button" onclick="document.getElementById('catalogSection').scrollIntoView({ behavior: 'smooth' })">Start shopping</button>
+            <button class="ghost-link" type="button" onclick="document.getElementById('featuredSection').scrollIntoView({ behavior: 'smooth' })">Explore deals</button>
           </div>
         </div>
         <div class="hero-panel">
-          <div class="hero-highlight">
-            <p class="section-kicker">Store highlights</p>
-            <div class="hero-highlight-row">
-              <strong id="heroProductCount">0</strong>
-              <span>Products ready to browse</span>
-            </div>
-            <div class="hero-highlight-row">
-              <strong id="heroCategoryCount">0</strong>
-              <span>Curated categories</span>
-            </div>
-            <div class="hero-highlight-row">
-              <strong id="heroDealCount">0</strong>
-              <span>Featured picks today</span>
-            </div>
-          </div>
-          <div class="hero-note-card">
-            <p class="section-kicker">Why shoppers stay</p>
-            <h3>Simple search, clear product cards, and checkout without friction.</h3>
-            <p>Everything important is visible at a glance: price, stock, ratings, saved items, and order tracking.</p>
-          </div>
+          <article class="hero-tile">
+            <p class="section-kicker">Browse more</p>
+            <h3><strong id="heroProductCount">0</strong> products in stock</h3>
+            <p>Search across fast movers, fresh arrivals, and featured picks.</p>
+          </article>
+          <article class="hero-tile">
+            <p class="section-kicker">Shop by type</p>
+            <h3><strong id="heroCategoryCount">0</strong> curated categories</h3>
+            <p>Move quickly from discovery to cart with filters that stay simple.</p>
+          </article>
+          <article class="hero-tile">
+            <p class="section-kicker">Today's picks</p>
+            <h3><strong id="heroDealCount">0</strong> featured deals</h3>
+            <p>Popular items, bundles, and highlights customers notice first.</p>
+          </article>
+          <article class="hero-tile hero-tile-accent">
+            <p class="section-kicker">Trusted checkout</p>
+            <h3>Order today and track with ease.</h3>
+            <p>Clear totals, multiple payment options, and live status updates after purchase.</p>
+          </article>
         </div>
       </div>
     </section>
 
     <main class="main-content">
-      <section class="quick-links">
-        <article class="quick-link-card">
-          <p class="section-kicker">Browse</p>
-          <h3>Explore by collection</h3>
-          <p>Use categories and filters to find the exact products you want faster.</p>
+      <section class="promo-shelf">
+        <article class="promo-shelf-card">
+          <p class="section-kicker">Deals of the day</p>
+          <h3>Top-value picks to add fast</h3>
+          <p>Featured products and quick wins customers usually notice first.</p>
         </article>
-        <article class="quick-link-card">
-          <p class="section-kicker">Save</p>
-          <h3>Build your watchlist</h3>
-          <p>Keep favorites close while you compare prices, stock, and featured picks.</p>
+        <article class="promo-shelf-card">
+          <p class="section-kicker">Easy repeat buying</p>
+          <h3>Save favorites to your watchlist</h3>
+          <p>Keep the products you want nearby while you compare and decide.</p>
         </article>
-        <article class="quick-link-card">
-          <p class="section-kicker">Track</p>
-          <h3>Follow every order</h3>
-          <p>Customers can quickly track placed orders from checkout to delivery.</p>
+        <article class="promo-shelf-card">
+          <p class="section-kicker">Smooth delivery flow</p>
+          <h3>Checkout, pay, and track</h3>
+          <p>Everything from cart to order tracking stays in one connected flow.</p>
         </article>
       </section>
 
       <section class="promo-grid">
         <article class="promo-card promo-card-featured">
-          <p class="section-kicker">Best sellers</p>
-          <h3>Popular picks customers love</h3>
-          <p>Lead with standout products that shoppers tend to revisit and reorder.</p>
+          <p class="section-kicker">Daily essentials</p>
+          <h3>Fresh picks for everyday baskets</h3>
+          <p>Give shoppers the quick-start products they expect on a marketplace homepage.</p>
         </article>
         <article class="promo-card">
-          <p class="section-kicker">Easy discovery</p>
-          <h3>Search, sort, and filter fast</h3>
-          <p>Keep the shopping journey simple with quick discovery tools across the full catalog.</p>
+          <p class="section-kicker">Smart discovery</p>
+          <h3>Search, sort, and narrow results</h3>
+          <p>Help customers find products fast with strong utility controls up front.</p>
         </article>
         <article class="promo-card">
-          <p class="section-kicker">Clean checkout</p>
-          <h3>Clear totals and payment options</h3>
-          <p>Make ordering feel trustworthy with a simple cart, transparent pricing, and tracking.</p>
+          <p class="section-kicker">Confident buying</p>
+          <h3>Visible stock, prices, and favorites</h3>
+          <p>Keep key buying signals clear so the store feels fast, useful, and trustworthy.</p>
         </article>
       </section>
 
