@@ -34,7 +34,7 @@ function createApp() {
   });
 
   app.get("/admin", (req, res) => {
-    res.sendFile(path.join(adminPath, "admin.html"));
+    res.redirect(302, "/admin/");
   });
 
   app.get("/admin/", (req, res) => {

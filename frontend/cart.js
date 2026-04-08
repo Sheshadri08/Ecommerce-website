@@ -4,7 +4,7 @@ const DEMO_ORDERS_KEY = "novacart_demo_orders_v1";
 const LAST_ORDER_KEY = "novacart_last_order_lookup_v1";
 const CONFIG = window.NOVACART_CONFIG || {};
 const API_BASE_URL = (CONFIG.API_BASE_URL || "").replace(/\/$/, "");
-const ADMIN_URL = CONFIG.ADMIN_URL || (API_BASE_URL ? `${API_BASE_URL}/admin` : "/admin");
+const ADMIN_URL = CONFIG.ADMIN_URL || (API_BASE_URL ? `${API_BASE_URL}/admin/` : "/admin/");
 const FALLBACK_CATALOG = Array.isArray(window.NOVACART_FALLBACK_CATALOG) ? window.NOVACART_FALLBACK_CATALOG : [];
 
 const PAYMENT_METHOD_LABELS = {

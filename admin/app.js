@@ -1,7 +1,13 @@
 const ADMIN_TOKEN_KEY = "novacart_admin_token";
+const DEMO_PRODUCTS_KEY = "novacart_demo_products_v1";
+const DEMO_ORDERS_KEY = "novacart_demo_orders_v1";
+const DEMO_ADMIN_TOKEN = "novacart-demo-token";
 const CONFIG = window.NOVACART_CONFIG || {};
 const API_BASE_URL = (CONFIG.API_BASE_URL || "").replace(/\/$/, "");
 const STOREFRONT_URL = CONFIG.STOREFRONT_URL || (API_BASE_URL ? `${API_BASE_URL}/` : "");
+const FALLBACK_CATALOG = Array.isArray(window.NOVACART_FALLBACK_CATALOG) ? window.NOVACART_FALLBACK_CATALOG : [];
+const DEFAULT_ADMIN_EMAIL = "25bcaf61@kristujaynti.com";
+const DEFAULT_ADMIN_PASSWORD = "1234567890";
 
 const state = {
   token: localStorage.getItem(ADMIN_TOKEN_KEY) || "",
@@ -37,6 +43,52 @@ function adminFetch(url, options = {}) {
       Authorization: `Bearer ${state.token}`,
     },
   });
+}
+
+function getDemoProducts() {
+  const storedProducts = JSON.parse(localStorage.getItem(DEMO_PRODUCTS_KEY) || "null");
+  if (Array.isArray(storedProducts) && storedProducts.length) {
+    return storedProducts;
+  }
+
+  const seededProducts = FALLBACK_CATALOG.map((product) => ({
+    ...product,
+    inventory: Number(product.inventory ?? 12),
+    featured: Boolean(product.featured ?? product.badge),
+  }));
+  localStorage.setItem(DEMO_PRODUCTS_KEY, JSON.stringify(seededProducts));
+  return seededProducts;
+}
+
+function saveDemoProducts(products) {
+  localStorage.setItem(DEMO_PRODUCTS_KEY, JSON.stringify(products));
+}
+
+function getDemoOrders() {
+  return JSON.parse(localStorage.getItem(DEMO_ORDERS_KEY) || "[]");
+}
+
+function saveDemoOrders(orders) {
+  localStorage.setItem(DEMO_ORDERS_KEY, JSON.stringify(orders));
+}
+
+function buildDemoOverview() {
+  const products = getDemoProducts();
+  const orders = getDemoOrders();
+  const revenue = orders.reduce((sum, order) => sum + Number(order.total || 0), 0);
+
+  return {
+    metrics: {
+      products: products.length,
+      orders: orders.length,
+      users: 1,
+      revenue,
+    },
+    lowStockProducts: products
+      .filter((product) => product.inventory <= 5)
+      .sort((left, right) => left.inventory - right.inventory || left.name.localeCompare(right.name))
+      .slice(0, 5),
+  };
 }
 
 function setAuthenticated(isAuthenticated) {
@@ -230,41 +282,58 @@ async function loadBootstrapHint() {
     document.getElementById("credentialHint").textContent =
       `${data.defaultAdminEmail} / ${data.defaultAdminPassword}`;
   } catch (error) {
-    // Non-blocking hint.
+    document.getElementById("credentialHint").textContent = `${DEFAULT_ADMIN_EMAIL} / ${DEFAULT_ADMIN_PASSWORD}`;
   }
 }
 
 async function loadProducts() {
-  const response = await fetch(apiUrl("/api/products?limit=120"));
-  if (!response.ok) throw new Error("Could not load products");
+  try {
+    const response = await fetch(apiUrl("/api/products?limit=120"));
+    if (!response.ok) throw new Error("Could not load products");
 
-  const data = await response.json();
-  state.products = data.products || [];
+    const data = await response.json();
+    state.products = data.products || [];
+  } catch (error) {
+    state.products = getDemoProducts();
+  }
+
   renderProductsTable();
 }
 
 async function loadOrders() {
-  const response = await adminFetch("/api/orders");
-  if (response.status === 401) {
-    logout();
-    throw new Error("Your admin session expired. Please sign in again.");
-  }
-  if (!response.ok) throw new Error("Could not load orders");
+  try {
+    const response = await adminFetch("/api/orders");
+    if (response.status === 401) {
+      logout();
+      throw new Error("Your admin session expired. Please sign in again.");
+    }
+    if (!response.ok) throw new Error("Could not load orders");
 
-  const data = await response.json();
-  state.orders = data.orders || [];
+    const data = await response.json();
+    state.orders = data.orders || [];
+  } catch (error) {
+    state.orders = getDemoOrders();
+  }
+
   renderOrdersTable();
 }
 
 async function loadOverview() {
-  const response = await adminFetch("/api/admin/overview");
-  if (response.status === 401) {
-    logout();
-    throw new Error("Your admin session expired. Please sign in again.");
-  }
-  if (!response.ok) throw new Error("Could not load dashboard");
+  let data;
 
-  const data = await response.json();
+  try {
+    const response = await adminFetch("/api/admin/overview");
+    if (response.status === 401) {
+      logout();
+      throw new Error("Your admin session expired. Please sign in again.");
+    }
+    if (!response.ok) throw new Error("Could not load dashboard");
+
+    data = await response.json();
+  } catch (error) {
+    data = buildDemoOverview();
+  }
+
   renderOverview(data);
 }
 
@@ -272,7 +341,7 @@ async function refreshDashboard() {
   try {
     setMessage("dashboardMessage", "Refreshing dashboard...");
     await Promise.all([loadProducts(), loadOrders(), loadOverview()]);
-    setMessage("dashboardMessage", "Dashboard synced.");
+    setMessage("dashboardMessage", API_BASE_URL ? "Dashboard synced." : "Dashboard running in GitHub demo mode.");
   } catch (error) {
     setMessage("dashboardMessage", error.message || "Could not refresh dashboard", true);
   }
@@ -281,17 +350,26 @@ async function refreshDashboard() {
 async function updateOrderStatus(orderId, status) {
   try {
     setMessage("dashboardMessage", `Updating order status to ${status}...`);
-    const response = await adminFetch(`/api/orders/${orderId}/status`, {
-      method: "PATCH",
-      body: JSON.stringify({ status }),
-    });
 
-    const data = await response.json().catch(() => ({}));
-    if (!response.ok) {
-      throw new Error(data.message || "Could not update order status");
+    if (!API_BASE_URL) {
+      state.orders = state.orders.map((order) =>
+        order.id === orderId ? { ...order, status, updatedAt: new Date().toISOString() } : order
+      );
+      saveDemoOrders(state.orders);
+    } else {
+      const response = await adminFetch(`/api/orders/${orderId}/status`, {
+        method: "PATCH",
+        body: JSON.stringify({ status }),
+      });
+
+      const data = await response.json().catch(() => ({}));
+      if (!response.ok) {
+        throw new Error(data.message || "Could not update order status");
+      }
+
+      state.orders = state.orders.map((order) => (order.id === orderId ? data : order));
     }
 
-    state.orders = state.orders.map((order) => (order.id === orderId ? data : order));
     renderOrdersTable();
     renderSelectedOrder();
     setMessage("dashboardMessage", "Order status updated.");
@@ -306,21 +384,29 @@ async function handleLogin(event) {
 
   try {
     setMessage("loginMessage", "Signing in...");
-    const response = await fetch(apiUrl("/api/users/login"), {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        email: document.getElementById("loginEmail").value.trim(),
-        password: document.getElementById("loginPassword").value,
-      }),
-    });
+    const email = document.getElementById("loginEmail").value.trim();
+    const password = document.getElementById("loginPassword").value;
 
-    const data = await response.json();
-    if (!response.ok || !data.token) {
-      throw new Error(data.message || "Admin login failed");
+    if (!API_BASE_URL) {
+      if (email !== DEFAULT_ADMIN_EMAIL || password !== DEFAULT_ADMIN_PASSWORD) {
+        throw new Error("Use the default demo admin credentials shown below.");
+      }
+      state.token = DEMO_ADMIN_TOKEN;
+    } else {
+      const response = await fetch(apiUrl("/api/users/login"), {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password }),
+      });
+
+      const data = await response.json();
+      if (!response.ok || !data.token) {
+        throw new Error(data.message || "Admin login failed");
+      }
+
+      state.token = data.token;
     }
 
-    state.token = data.token;
     localStorage.setItem(ADMIN_TOKEN_KEY, state.token);
     setAuthenticated(true);
     setMessage("loginMessage", "");
@@ -339,14 +425,30 @@ async function handleProductSubmit(event) {
 
   try {
     setMessage("productMessage", productId ? "Updating product..." : "Creating product...");
-    const response = await adminFetch(url, {
-      method,
-      body: JSON.stringify(getProductPayload()),
-    });
 
-    const data = await response.json().catch(() => ({}));
-    if (!response.ok) {
-      throw new Error(data.message || "Could not save product");
+    if (!API_BASE_URL) {
+      const payload = getProductPayload();
+      const products = getDemoProducts();
+      if (productId) {
+        const index = products.findIndex((product) => product.id === productId);
+        if (index === -1) {
+          throw new Error("Product not found");
+        }
+        products[index] = { ...products[index], ...payload, id: productId };
+      } else {
+        products.unshift({ ...payload, id: `demo-product-${Date.now()}` });
+      }
+      saveDemoProducts(products);
+    } else {
+      const response = await adminFetch(url, {
+        method,
+        body: JSON.stringify(getProductPayload()),
+      });
+
+      const data = await response.json().catch(() => ({}));
+      if (!response.ok) {
+        throw new Error(data.message || "Could not save product");
+      }
     }
 
     resetProductForm();
@@ -362,13 +464,18 @@ async function deleteProduct(productId) {
   if (!confirmed) return;
 
   try {
-    const response = await adminFetch(`/api/products/${productId}`, {
-      method: "DELETE",
-    });
+    if (!API_BASE_URL) {
+      const products = getDemoProducts().filter((product) => product.id !== productId);
+      saveDemoProducts(products);
+    } else {
+      const response = await adminFetch(`/api/products/${productId}`, {
+        method: "DELETE",
+      });
 
-    const data = await response.json().catch(() => ({}));
-    if (!response.ok) {
-      throw new Error(data.message || "Could not delete product");
+      const data = await response.json().catch(() => ({}));
+      if (!response.ok) {
+        throw new Error(data.message || "Could not delete product");
+      }
     }
 
     setMessage("productMessage", "Product deleted.");

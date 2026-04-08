@@ -17,7 +17,7 @@
 
   window.NOVACART_CONFIG = {
     API_BASE_URL: apiBaseUrl,
-    ADMIN_URL: apiBaseUrl ? `${apiBaseUrl}/admin` : "",
+    ADMIN_URL: apiBaseUrl ? `${apiBaseUrl}/admin/` : "",
   };
 
   function normalizeUrl(value) {

@@ -3,7 +3,7 @@ const WISHLIST_KEY = "novacart_wishlist_v1";
 const DEMO_PRODUCTS_KEY = "novacart_demo_products_v1";
 const CONFIG = window.NOVACART_CONFIG || {};
 const API_BASE_URL = (CONFIG.API_BASE_URL || "").replace(/\/$/, "");
-const ADMIN_URL = CONFIG.ADMIN_URL || (API_BASE_URL ? `${API_BASE_URL}/admin` : "/admin");
+const ADMIN_URL = CONFIG.ADMIN_URL || (API_BASE_URL ? `${API_BASE_URL}/admin/` : "/admin/");
 const FALLBACK_CATALOG = Array.isArray(window.NOVACART_FALLBACK_CATALOG) ? window.NOVACART_FALLBACK_CATALOG : [];
 
 const state = {

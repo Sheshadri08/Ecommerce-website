@@ -1,0 +1,581 @@
+%PDF-1.4
+%‚„œ”
+1 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>
+endobj
+2 0 obj
+<< /Length 1858 >>
+stream
+BT
+/F1 11 Tf
+48 788 Td
+(NOVACART WEBSITE DOCUMENTATION) Tj
+0 -15 Td
+() Tj
+0 -15 Td
+() Tj
+0 -15 Td
+(Overview) Tj
+0 -15 Td
+(--------) Tj
+0 -15 Td
+() Tj
+0 -15 Td
+(NovaCart is a full-stack ecommerce website with:) Tj
+0 -15 Td
+() Tj
+0 -15 Td
+(- Product browsing and filtering) Tj
+0 -15 Td
+(- Cart and checkout) Tj
+0 -15 Td
+(- Address and payment selection during checkout) Tj
+0 -15 Td
+(- Admin order and product management) Tj
+0 -15 Td
+(- Customer order tracking) Tj
+0 -15 Td
+(- GitHub Pages frontend fallback support) Tj
+0 -15 Td
+(- Render-ready backend deployment) Tj
+0 -15 Td
+() Tj
+0 -15 Td
+(The project can run in two modes:) Tj
+0 -15 Td
+() Tj
+0 -15 Td
+(1. Full-stack mode with the frontend and backend served together from Node/Express) Tj
+0 -15 Td
+(2. Static frontend mode on GitHub Pages with the backend hosted separately) Tj
+0 -15 Td
+() Tj
+0 -15 Td
+(Project Structure) Tj
+0 -15 Td
+(-----------------) Tj
+0 -15 Td
+() Tj
+0 -15 Td
+(- `frontend/`) Tj
+0 -15 Td
+(  Customer-facing storefront, cart, and order tracking pages) Tj
+0 -15 Td
+(- `admin/`) Tj
+0 -15 Td
+(  Admin dashboard UI for products and orders) Tj
+0 -15 Td
+(- `backend/`) Tj
+0 -15 Td
+(  Express API, MongoDB models, and routes) Tj
+0 -15 Td
+(- `render.yaml`) Tj
+0 -15 Td
+(  Render deployment blueprint) Tj
+0 -15 Td
+(- `.env.example`) Tj
+0 -15 Td
+(  Example local environment configuration) Tj
+0 -15 Td
+() Tj
+0 -15 Td
+(Main Features) Tj
+0 -15 Td
+(-------------) Tj
+0 -15 Td
+() Tj
+0 -15 Td
+(Storefront:) Tj
+0 -15 Td
+() Tj
+0 -15 Td
+(- Product listing with category, search, sort, and price filters) Tj
+0 -15 Td
+(- Wishlist support) Tj
+0 -15 Td
+(- Quick product modal) Tj
+0 -15 Td
+(- Cart management) Tj
+0 -15 Td
+(- Demo fallback catalog for GitHub Pages or offline frontend use) Tj
+0 -15 Td
+() Tj
+0 -15 Td
+(Checkout:) Tj
+0 -15 Td
+() Tj
+0 -15 Td
+(Customers can place orders with:) Tj
+0 -15 Td
+() Tj
+ET
+endstream
+endobj
+3 0 obj
+<< /Length 1486 >>
+stream
+BT
+/F1 11 Tf
+48 788 Td
+(- Name) Tj
+0 -15 Td
+(- Email) Tj
+0 -15 Td
+(- Phone number) Tj
+0 -15 Td
+(- Delivery address) Tj
+0 -15 Td
+(- Payment method) Tj
+0 -15 Td
+() Tj
+0 -15 Td
+(Supported payment methods:) Tj
+0 -15 Td
+() Tj
+0 -15 Td
+(- Cash on Delivery) Tj
+0 -15 Td
+(- UPI) Tj
+0 -15 Td
+(- Debit / Credit Card) Tj
+0 -15 Td
+(- Net Banking) Tj
+0 -15 Td
+() Tj
+0 -15 Td
+(Order Tracking:) Tj
+0 -15 Td
+() Tj
+0 -15 Td
+(Customers can track orders using:) Tj
+0 -15 Td
+() Tj
+0 -15 Td
+(- Order ID) Tj
+0 -15 Td
+(- Customer email) Tj
+0 -15 Td
+() Tj
+0 -15 Td
+(Tracking works in:) Tj
+0 -15 Td
+() Tj
+0 -15 Td
+(- Backend mode through the public tracking API) Tj
+0 -15 Td
+(- Demo mode through browser local storage fallback) Tj
+0 -15 Td
+() Tj
+0 -15 Td
+(Admin Dashboard:) Tj
+0 -15 Td
+() Tj
+0 -15 Td
+(The admin area includes:) Tj
+0 -15 Td
+() Tj
+0 -15 Td
+(- Product list and product editing) Tj
+0 -15 Td
+(- Order list and order details) Tj
+0 -15 Td
+(- Order status updates) Tj
+0 -15 Td
+(- Dashboard metrics) Tj
+0 -15 Td
+(- Low-stock overview) Tj
+0 -15 Td
+() Tj
+0 -15 Td
+(Local Development) Tj
+0 -15 Td
+(-----------------) Tj
+0 -15 Td
+() Tj
+0 -15 Td
+(Requirements:) Tj
+0 -15 Td
+() Tj
+0 -15 Td
+(- Node.js) Tj
+0 -15 Td
+(- MongoDB local instance or a MongoDB connection string) Tj
+0 -15 Td
+() Tj
+0 -15 Td
+(Environment Variables:) Tj
+0 -15 Td
+() Tj
+0 -15 Td
+(Copy `.env.example` into a `.env` file and configure:) Tj
+0 -15 Td
+() Tj
+0 -15 Td
+(- `PORT`) Tj
+0 -15 Td
+(- `MONGODB_URI`) Tj
+0 -15 Td
+(- `ADMIN_NAME`) Tj
+ET
+endstream
+endobj
+4 0 obj
+<< /Length 1643 >>
+stream
+BT
+/F1 11 Tf
+48 788 Td
+(- `ADMIN_EMAIL`) Tj
+0 -15 Td
+(- `ADMIN_PASSWORD`) Tj
+0 -15 Td
+(- `ADMIN_TOKEN_SECRET`) Tj
+0 -15 Td
+() Tj
+0 -15 Td
+(Current default seeded admin credentials in this repo:) Tj
+0 -15 Td
+() Tj
+0 -15 Td
+(- Email: `25bcaf61@kristujaynti.com`) Tj
+0 -15 Td
+(- Password: `1234567890`) Tj
+0 -15 Td
+() Tj
+0 -15 Td
+(For production, change these values.) Tj
+0 -15 Td
+() Tj
+0 -15 Td
+(Start Locally:) Tj
+0 -15 Td
+() Tj
+0 -15 Td
+() Tj
+0 -15 Td
+(    npm install) Tj
+0 -15 Td
+(    npm run seed) Tj
+0 -15 Td
+(    npm start) Tj
+0 -15 Td
+() Tj
+0 -15 Td
+() Tj
+0 -15 Td
+(Default local URLs:) Tj
+0 -15 Td
+() Tj
+0 -15 Td
+(- Storefront: `http://localhost:5000/`) Tj
+0 -15 Td
+(- Admin: `http://localhost:5000/admin`) Tj
+0 -15 Td
+(- Health: `http://localhost:5000/health`) Tj
+0 -15 Td
+() Tj
+0 -15 Td
+(Deployment) Tj
+0 -15 Td
+(----------) Tj
+0 -15 Td
+() Tj
+0 -15 Td
+(Important Note:) Tj
+0 -15 Td
+() Tj
+0 -15 Td
+(GitHub Pages cannot run the Express backend.) Tj
+0 -15 Td
+() Tj
+0 -15 Td
+(That means:) Tj
+0 -15 Td
+() Tj
+0 -15 Td
+(- GitHub Pages can host the static frontend) Tj
+0 -15 Td
+(- Render, Railway, or another Node host must run the backend) Tj
+0 -15 Td
+() Tj
+0 -15 Td
+(Render Deployment:) Tj
+0 -15 Td
+() Tj
+0 -15 Td
+(This repository already includes `render.yaml`.) Tj
+0 -15 Td
+() Tj
+0 -15 Td
+(Render setup steps:) Tj
+0 -15 Td
+() Tj
+0 -15 Td
+(1. Push the repository to GitHub) Tj
+0 -15 Td
+(2. In Render, choose `New +` -> `Blueprint`) Tj
+0 -15 Td
+(3. Select the GitHub repository) Tj
+0 -15 Td
+(4. Let Render detect `render.yaml`) Tj
+0 -15 Td
+(5. Set the required environment values) Tj
+0 -15 Td
+() Tj
+0 -15 Td
+(Required backend values:) Tj
+ET
+endstream
+endobj
+5 0 obj
+<< /Length 1555 >>
+stream
+BT
+/F1 11 Tf
+48 788 Td
+() Tj
+0 -15 Td
+(- `MONGODB_URI`) Tj
+0 -15 Td
+(- `ADMIN_TOKEN_SECRET`) Tj
+0 -15 Td
+() Tj
+0 -15 Td
+(The current blueprint also defines:) Tj
+0 -15 Td
+() Tj
+0 -15 Td
+(- `ADMIN_NAME`) Tj
+0 -15 Td
+(- `ADMIN_EMAIL`) Tj
+0 -15 Td
+(- `ADMIN_PASSWORD`) Tj
+0 -15 Td
+(- `PORT`) Tj
+0 -15 Td
+(- `NODE_VERSION`) Tj
+0 -15 Td
+() Tj
+0 -15 Td
+(GitHub Pages Frontend:) Tj
+0 -15 Td
+() Tj
+0 -15 Td
+(Static frontend URL:) Tj
+0 -15 Td
+() Tj
+0 -15 Td
+(- `https://sheshadri08.github.io/Ecommerce-website/`) Tj
+0 -15 Td
+() Tj
+0 -15 Td
+(When using GitHub Pages, the frontend supports an `api` query parameter:) Tj
+0 -15 Td
+() Tj
+0 -15 Td
+() Tj
+0 -15 Td
+(    https://sheshadri08.github.io/Ecommerce-website/?api=https://<your-render-service>.onrender.com) Tj
+0 -15 Td
+() Tj
+0 -15 Td
+() Tj
+0 -15 Td
+(After opening it once, the frontend stores the backend URL in local storage and keeps) Tj
+0 -15 Td
+(using it.) Tj
+0 -15 Td
+() Tj
+0 -15 Td
+(Customer Order Tracking) Tj
+0 -15 Td
+(-----------------------) Tj
+0 -15 Td
+() Tj
+0 -15 Td
+(Customer order tracking page:) Tj
+0 -15 Td
+() Tj
+0 -15 Td
+(- `frontend/track.html`) Tj
+0 -15 Td
+() Tj
+0 -15 Td
+(Tracking requires:) Tj
+0 -15 Td
+() Tj
+0 -15 Td
+(- Order ID) Tj
+0 -15 Td
+(- Customer email) Tj
+0 -15 Td
+() Tj
+0 -15 Td
+(Live tracking uses the backend route:) Tj
+0 -15 Td
+() Tj
+0 -15 Td
+(- `GET /api/orders/track/:id?email=<customer-email>`) Tj
+0 -15 Td
+() Tj
+0 -15 Td
+(Key API Areas) Tj
+0 -15 Td
+(-------------) Tj
+0 -15 Td
+() Tj
+0 -15 Td
+(Products:) Tj
+0 -15 Td
+() Tj
+0 -15 Td
+(- `GET /api/products`) Tj
+0 -15 Td
+() Tj
+ET
+endstream
+endobj
+6 0 obj
+<< /Length 1781 >>
+stream
+BT
+/F1 11 Tf
+48 788 Td
+(Orders:) Tj
+0 -15 Td
+() Tj
+0 -15 Td
+(- `POST /api/orders`) Tj
+0 -15 Td
+(- `GET /api/orders/track/:id`) Tj
+0 -15 Td
+(- `PATCH /api/orders/:id/status` \(admin\)) Tj
+0 -15 Td
+(- `GET /api/orders` \(admin\)) Tj
+0 -15 Td
+() Tj
+0 -15 Td
+(Users:) Tj
+0 -15 Td
+() Tj
+0 -15 Td
+(- `POST /api/users/login`) Tj
+0 -15 Td
+(- `GET /api/users/bootstrap`) Tj
+0 -15 Td
+() Tj
+0 -15 Td
+(Admin:) Tj
+0 -15 Td
+() Tj
+0 -15 Td
+(- `GET /api/admin/overview`) Tj
+0 -15 Td
+() Tj
+0 -15 Td
+(Demo Mode Notes) Tj
+0 -15 Td
+(---------------) Tj
+0 -15 Td
+() Tj
+0 -15 Td
+(If the backend is unavailable, parts of the frontend can still work in demo mode:) Tj
+0 -15 Td
+() Tj
+0 -15 Td
+(- Product catalog can use a fallback dataset) Tj
+0 -15 Td
+(- Orders can be stored in local storage) Tj
+0 -15 Td
+(- Customer order tracking can read demo orders from local storage) Tj
+0 -15 Td
+() Tj
+0 -15 Td
+(This is useful for GitHub Pages previews, but it is not a substitute for the real backend.) Tj
+0 -15 Td
+() Tj
+0 -15 Td
+(Security Note) Tj
+0 -15 Td
+(-------------) Tj
+0 -15 Td
+() Tj
+0 -15 Td
+(The current repository includes default admin credentials for setup convenience. For any) Tj
+0 -15 Td
+(public or production deployment:) Tj
+0 -15 Td
+() Tj
+0 -15 Td
+(- Change the admin password) Tj
+0 -15 Td
+(- Use a strong `ADMIN_TOKEN_SECRET`) Tj
+0 -15 Td
+(- Use a private MongoDB connection string) Tj
+0 -15 Td
+() Tj
+0 -15 Td
+(Summary) Tj
+0 -15 Td
+(-------) Tj
+0 -15 Td
+() Tj
+0 -15 Td
+(NovaCart is set up as a deployable ecommerce project with:) Tj
+0 -15 Td
+() Tj
+0 -15 Td
+(- A customer storefront) Tj
+0 -15 Td
+(- Checkout with address and payment support) Tj
+0 -15 Td
+(- Admin management tools) Tj
+0 -15 Td
+(- Customer order tracking) Tj
+0 -15 Td
+(- Local, demo, GitHub Pages, and Render deployment paths) Tj
+ET
+endstream
+endobj
+7 0 obj
+<< /Type /Pages /Count 5 /Kids [8 0 R 9 0 R 10 0 R 11 0 R 12 0 R] >>
+endobj
+8 0 obj
+<< /Type /Page /Parent 7 0 R /MediaBox [0 0 595 842] /Resources << /Font << /F1 1 0 R >> >> /Contents 2 0 R >>
+endobj
+9 0 obj
+<< /Type /Page /Parent 7 0 R /MediaBox [0 0 595 842] /Resources << /Font << /F1 1 0 R >> >> /Contents 3 0 R >>
+endobj
+10 0 obj
+<< /Type /Page /Parent 7 0 R /MediaBox [0 0 595 842] /Resources << /Font << /F1 1 0 R >> >> /Contents 4 0 R >>
+endobj
+11 0 obj
+<< /Type /Page /Parent 7 0 R /MediaBox [0 0 595 842] /Resources << /Font << /F1 1 0 R >> >> /Contents 5 0 R >>
+endobj
+12 0 obj
+<< /Type /Page /Parent 7 0 R /MediaBox [0 0 595 842] /Resources << /Font << /F1 1 0 R >> >> /Contents 6 0 R >>
+endobj
+13 0 obj
+<< /Type /Catalog /Pages 7 0 R >>
+endobj
+xref
+0 14
+0000000000 65535 f 
+0000000015 00000 n 
+0000000085 00000 n 
+0000001995 00000 n 
+0000003533 00000 n 
+0000005228 00000 n 
+0000006835 00000 n 
+0000008668 00000 n 
+0000008752 00000 n 
+0000008878 00000 n 
+0000009004 00000 n 
+0000009131 00000 n 
+0000009258 00000 n 
+0000009385 00000 n 
+trailer
+<< /Size 14 /Root 13 0 R >>
+startxref
+9435
+%%EOF
