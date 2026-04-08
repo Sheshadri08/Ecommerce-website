@@ -9,12 +9,9 @@
     window.localStorage.setItem(STORAGE_KEY, configuredApi);
   }
 
+  const sameOriginApi = inferSameOriginApiBaseUrl();
   const localApi = inferLocalApiBaseUrl();
-  const apiBaseUrl =
-    configuredApi ||
-    localApi ||
-    storedApi ||
-    defaultApi;
+  const apiBaseUrl = configuredApi || sameOriginApi || localApi || storedApi || defaultApi;
 
   window.NOVACART_CONFIG = {
     API_BASE_URL: apiBaseUrl,
@@ -35,5 +32,13 @@
     }
 
     return `${window.location.protocol}//${window.location.hostname}:5000`;
+  }
+
+  function inferSameOriginApiBaseUrl() {
+    if (!["localhost", "127.0.0.1"].includes(window.location.hostname)) {
+      return "";
+    }
+
+    return window.location.port === "5000" ? window.location.origin : "";
   }
 })();
