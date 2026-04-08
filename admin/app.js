@@ -386,6 +386,7 @@ async function handleLogin(event) {
     setMessage("loginMessage", "Signing in...");
     const email = document.getElementById("loginEmail").value.trim();
     const password = document.getElementById("loginPassword").value;
+    const usingDefaultCredentials = email === DEFAULT_ADMIN_EMAIL && password === DEFAULT_ADMIN_PASSWORD;
 
     if (!API_BASE_URL) {
       if (email !== DEFAULT_ADMIN_EMAIL || password !== DEFAULT_ADMIN_PASSWORD) {
@@ -393,14 +394,40 @@ async function handleLogin(event) {
       }
       state.token = DEMO_ADMIN_TOKEN;
     } else {
-      const response = await fetch(apiUrl("/api/users/login"), {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password }),
-      });
+      let response;
+      let data;
 
-      const data = await response.json();
+      try {
+        response = await fetch(apiUrl("/api/users/login"), {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email, password }),
+        });
+
+        data = await response.json().catch(() => ({}));
+      } catch (error) {
+        if (!usingDefaultCredentials) {
+          throw new Error("Could not reach the backend login service.");
+        }
+
+        state.token = DEMO_ADMIN_TOKEN;
+        localStorage.removeItem(ADMIN_TOKEN_KEY);
+        setAuthenticated(true);
+        setMessage("loginMessage", "Backend unavailable. Signed in to demo admin mode.");
+        await refreshDashboard();
+        return;
+      }
+
       if (!response.ok || !data.token) {
+        if (usingDefaultCredentials && response.status >= 500) {
+          state.token = DEMO_ADMIN_TOKEN;
+          localStorage.removeItem(ADMIN_TOKEN_KEY);
+          setAuthenticated(true);
+          setMessage("loginMessage", "Backend unavailable. Signed in to demo admin mode.");
+          await refreshDashboard();
+          return;
+        }
+
         throw new Error(data.message || "Admin login failed");
       }
 
@@ -409,7 +436,7 @@ async function handleLogin(event) {
 
     localStorage.setItem(ADMIN_TOKEN_KEY, state.token);
     setAuthenticated(true);
-    setMessage("loginMessage", "");
+    setMessage("loginMessage", API_BASE_URL ? "" : "Signed in to demo admin mode.");
     await refreshDashboard();
   } catch (error) {
     setMessage("loginMessage", error.message || "Could not sign in", true);
