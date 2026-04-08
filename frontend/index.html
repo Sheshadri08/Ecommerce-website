@@ -14,9 +14,9 @@
   </head>
   <body>
     <div class="top-strip">
-      <span>Fresh inventory updated daily</span>
+      <span>Free delivery on orders above INR 1499</span>
+      <span>Secure checkout with live order tracking</span>
       <span id="wishlistSummary">Watchlist 0</span>
-      <span>Wholesale-friendly checkout with live inventory</span>
     </div>
 
     <header class="site-header">
@@ -24,15 +24,15 @@
         <span class="brand-dot"></span>
         <div>
           <h1>NovaCart</h1>
-          <p class="header-subtitle">Modern storefront and inventory desk</p>
+          <p class="header-subtitle">Fresh essentials and premium picks</p>
         </div>
       </div>
       <div class="search-wrap">
-        <input id="searchInput" type="search" placeholder="Search mangoes, berries, crates, gift packs..." />
+        <input id="searchInput" type="search" placeholder="Search fruits, snacks, pantry items, gift packs..." />
       </div>
       <div class="header-actions">
         <select id="sortSelect" aria-label="Sort products">
-          <option value="featured">Latest stock</option>
+          <option value="featured">Featured</option>
           <option value="rating">Top rated</option>
           <option value="price-asc">Price: Low to High</option>
           <option value="price-desc">Price: High to Low</option>
@@ -47,65 +47,91 @@
 
     <section class="hero">
       <div class="hero-content">
-        <div>
+        <div class="hero-copy">
           <p class="hero-tag">Fresh arrivals</p>
-          <h2>Run your store with live inventory, featured picks, and checkout that stays simple.</h2>
+          <h2>Fresh shopping made simple, fast, and beautifully organized.</h2>
           <p>
-            Browse curated products, fast movers, and premium picks in one place.
-            This storefront is tuned for repeat buyers, live stock movement, and quick admin updates.
+            Discover everyday essentials, seasonal favorites, and premium picks in one clean storefront built for easy browsing and quick checkout.
           </p>
+          <div class="hero-badges">
+            <span>Best sellers updated daily</span>
+            <span>Live stock visibility</span>
+            <span>Fast checkout flow</span>
+          </div>
           <div class="hero-cta-row">
-            <button id="jumpDealsButton" class="ghost-link" type="button">View featured products</button>
-            <button id="jumpCatalogButton" class="cart-link" type="button">Browse catalog</button>
+            <button id="jumpCatalogButton" class="cart-link" type="button">Shop now</button>
+            <button id="jumpDealsButton" class="ghost-link" type="button">View best sellers</button>
           </div>
         </div>
-        <div class="hero-stat-grid">
-          <article>
-            <strong id="heroProductCount">0</strong>
-            <span>Product listings</span>
-          </article>
-          <article>
-            <strong id="heroCategoryCount">0</strong>
-            <span>Categories</span>
-          </article>
-          <article>
-            <strong id="heroDealCount">0</strong>
-            <span>Featured lots</span>
-          </article>
-          <article>
-            <strong>24/7</strong>
-            <span>Admin visibility</span>
-          </article>
+        <div class="hero-panel">
+          <div class="hero-highlight">
+            <p class="section-kicker">Store highlights</p>
+            <div class="hero-highlight-row">
+              <strong id="heroProductCount">0</strong>
+              <span>Products ready to browse</span>
+            </div>
+            <div class="hero-highlight-row">
+              <strong id="heroCategoryCount">0</strong>
+              <span>Curated categories</span>
+            </div>
+            <div class="hero-highlight-row">
+              <strong id="heroDealCount">0</strong>
+              <span>Featured picks today</span>
+            </div>
+          </div>
+          <div class="hero-note-card">
+            <p class="section-kicker">Why shoppers stay</p>
+            <h3>Simple search, clear product cards, and checkout without friction.</h3>
+            <p>Everything important is visible at a glance: price, stock, ratings, saved items, and order tracking.</p>
+          </div>
         </div>
       </div>
     </section>
 
     <main class="main-content">
+      <section class="quick-links">
+        <article class="quick-link-card">
+          <p class="section-kicker">Browse</p>
+          <h3>Explore by collection</h3>
+          <p>Use categories and filters to find the exact products you want faster.</p>
+        </article>
+        <article class="quick-link-card">
+          <p class="section-kicker">Save</p>
+          <h3>Build your watchlist</h3>
+          <p>Keep favorites close while you compare prices, stock, and featured picks.</p>
+        </article>
+        <article class="quick-link-card">
+          <p class="section-kicker">Track</p>
+          <h3>Follow every order</h3>
+          <p>Customers can quickly track placed orders from checkout to delivery.</p>
+        </article>
+      </section>
+
       <section class="promo-grid">
         <article class="promo-card promo-card-featured">
-          <p class="section-kicker">Fast movers</p>
-          <h3>Products for daily turnover</h3>
-          <p>Highlight the items that sell fastest across home delivery and repeat customer orders.</p>
+          <p class="section-kicker">Best sellers</p>
+          <h3>Popular picks customers love</h3>
+          <p>Lead with standout products that shoppers tend to revisit and reorder.</p>
         </article>
         <article class="promo-card">
-          <p class="section-kicker">Stock control</p>
-          <h3>Low inventory visibility</h3>
-          <p>Inventory badges show what is plentiful, running low, or already sold through.</p>
+          <p class="section-kicker">Easy discovery</p>
+          <h3>Search, sort, and filter fast</h3>
+          <p>Keep the shopping journey simple with quick discovery tools across the full catalog.</p>
         </article>
         <article class="promo-card">
-          <p class="section-kicker">Buyer memory</p>
-          <h3>Personal watchlist</h3>
-          <p>Save products to revisit before placing your next order.</p>
+          <p class="section-kicker">Clean checkout</p>
+          <h3>Clear totals and payment options</h3>
+          <p>Make ordering feel trustworthy with a simple cart, transparent pricing, and tracking.</p>
         </article>
       </section>
 
       <section id="featuredSection" class="collection-block">
         <div class="section-heading">
           <div>
-            <p class="section-kicker">Featured inventory</p>
-            <h3>Popular picks this week</h3>
+            <p class="section-kicker">Featured collection</p>
+            <h3>Best sellers and trending products</h3>
           </div>
-          <p class="results-info">Premium picks and quick-selling lines from the current stock sheet.</p>
+          <p class="results-info">A quick way to discover the most interesting items in the store right now.</p>
         </div>
         <div id="featuredRail" class="featured-rail"></div>
       </section>
@@ -116,7 +142,7 @@
             <p class="section-kicker">Saved items</p>
             <h3>Your watchlist</h3>
           </div>
-          <p class="results-info">Hold onto promising stock lots before you place the order.</p>
+          <p class="results-info">Return to the products you saved and move them into the cart when you are ready.</p>
         </div>
         <div id="wishlistRail" class="featured-rail"></div>
       </section>
@@ -125,8 +151,8 @@
         <aside class="filter-panel">
           <div class="section-heading compact-heading">
             <div>
-              <p class="section-kicker">Filter stock</p>
-              <h3>Freshness filters</h3>
+              <p class="section-kicker">Refine results</p>
+              <h3>Shop filters</h3>
             </div>
           </div>
 
@@ -142,7 +168,7 @@
 
           <label class="check-row">
             <input id="featuredOnlyInput" type="checkbox" />
-            <span>Featured lots only</span>
+            <span>Featured only</span>
           </label>
 
           <label class="check-row">
@@ -154,6 +180,13 @@
         </aside>
 
         <div class="catalog-main">
+          <div class="catalog-intro">
+            <div>
+              <p class="section-kicker">Full catalog</p>
+              <h3>Browse all products</h3>
+            </div>
+            <p class="results-info">Search, compare, save favorites, and add to cart from one clean product grid.</p>
+          </div>
           <div id="categoryChips" class="chips"></div>
           <div class="toolbar">
             <p id="resultsInfo" class="results-info"></p>
