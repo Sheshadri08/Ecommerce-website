@@ -58,11 +58,15 @@ async function seedAdmin() {
   console.log(`Created admin account for ${adminEmail}.`);
 }
 
+async function ensureBootstrapData() {
+  await seedProducts();
+  await seedAdmin();
+}
+
 async function runSeed() {
   try {
     await connectToDatabase();
-    await seedProducts();
-    await seedAdmin();
+    await ensureBootstrapData();
     console.log("Seed complete.");
     process.exit(0);
   } catch (error) {
@@ -71,4 +75,12 @@ async function runSeed() {
   }
 }
 
-runSeed();
+if (require.main === module) {
+  runSeed();
+}
+
+module.exports = {
+  ensureBootstrapData,
+  seedAdmin,
+  seedProducts,
+};

@@ -1,5 +1,6 @@
 const createApp = require("./app");
 const { connectToDatabase } = require("./db");
+const { ensureBootstrapData } = require("./seeds");
 const os = require("os");
 
 try {
@@ -27,7 +28,8 @@ function getLocalNetworkUrl(port) {
 }
 
 connectToDatabase()
-  .then(() => {
+  .then(async () => {
+    await ensureBootstrapData();
     app.listen(PORT, HOST, () => {
       const localUrl = `http://localhost:${PORT}`;
       const networkUrl = getLocalNetworkUrl(PORT);
