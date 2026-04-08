@@ -25,10 +25,20 @@ jobs:
       - name: Configure Pages
         uses: actions/configure-pages@v5
 
+      - name: Prepare static site
+        run: |
+          rm -rf pages-dist
+          mkdir -p pages-dist
+          cp index.html pages-dist/
+          cp -R frontend pages-dist/frontend
+          cp -R admin pages-dist/admin
+          cp admin/admin.html pages-dist/admin/index.html
+          touch pages-dist/.nojekyll
+
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: .
+          path: pages-dist
 
   deploy:
     needs: build
