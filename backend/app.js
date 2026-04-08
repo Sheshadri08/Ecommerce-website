@@ -20,25 +20,26 @@ function createApp() {
   app.use("/api/users", userRoutes);
   app.use("/api/admin", adminRoutes);
 
+  app.get(/^\/admin$/, (req, res) => {
+    res.redirect(302, "/admin/");
+  });
+
+  app.get("/admin/", (req, res) => {
+    res.sendFile(path.join(adminPath, "admin.html"));
+  });
+
   app.use(express.static(frontendPath));
   app.use("/frontend", express.static(frontendPath));
   app.use(
     "/admin",
     express.static(adminPath, {
       index: false,
+      redirect: false,
     })
   );
 
   app.get("/", (req, res) => {
     res.sendFile(path.join(frontendPath, "index.html"));
-  });
-
-  app.get("/admin", (req, res) => {
-    res.redirect(302, "/admin/");
-  });
-
-  app.get("/admin/", (req, res) => {
-    res.sendFile(path.join(adminPath, "admin.html"));
   });
 
   app.get("/health", (req, res) => {
