@@ -1,8 +1,8 @@
-const CART_KEY = "novacart_cart_v1";
-const DEMO_PRODUCTS_KEY = "novacart_demo_products_v1";
-const DEMO_ORDERS_KEY = "novacart_demo_orders_v1";
-const LAST_ORDER_KEY = "novacart_last_order_lookup_v1";
-const CUSTOMER_SESSION_KEY = "novacart_customer_session_v1";
+const CART_KEY = "fruitstock_cart_v1";
+const DEMO_PRODUCTS_KEY = "fruitstock_demo_products_v1";
+const DEMO_ORDERS_KEY = "fruitstock_demo_orders_v1";
+const LAST_ORDER_KEY = "fruitstock_last_order_lookup_v1";
+const CUSTOMER_SESSION_KEY = "fruitstock_customer_session_v1";
 const CONFIG = window.NOVACART_CONFIG || {};
 const API_BASE_URL = (CONFIG.API_BASE_URL || "").replace(/\/$/, "");
 const ADMIN_URL = CONFIG.ADMIN_URL || (API_BASE_URL ? `${API_BASE_URL}/admin/` : "/admin/");
@@ -13,6 +13,7 @@ const PAYMENT_METHOD_LABELS = {
   upi: "UPI",
   card: "Debit / Credit Card",
   net_banking: "Net Banking",
+  wallet: "Wallet",
 };
 
 function formatPrice(value) {
@@ -94,8 +95,8 @@ function hydrateCustomerDetails() {
 
 function calculateTotals(cart) {
   const subtotal = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
-  const shipping = subtotal >= 3999 || subtotal === 0 ? 0 : 149;
-  const tax = Math.round(subtotal * 0.05);
+  const shipping = subtotal >= 1499 || subtotal === 0 ? 0 : 79;
+  const tax = Math.round(subtotal * 0.02);
   const total = subtotal + shipping + tax;
   return { subtotal, shipping, tax, total };
 }
@@ -132,9 +133,9 @@ function renderCartList(cart) {
   if (!cart.length) {
     list.innerHTML = `
       <div class="empty-state">
-        <h3>Your cart is empty</h3>
-        <p>Add a few products and come back to checkout.</p>
-        <a href="index.html" class="cart-link">Shop Products</a>
+        <h3>Your fruit cart is empty</h3>
+        <p>Add a few fresh listings and come back when you are ready to check out.</p>
+        <a href="index.html" class="cart-link">Shop Fruit</a>
       </div>
     `;
     return;
@@ -175,7 +176,7 @@ function placeDemoOrder(payload) {
   const items = payload.items.map((item) => {
     const product = productMap.get(item.id);
     if (!product) {
-      throw new Error("One or more products are unavailable.");
+      throw new Error("One or more fruit listings are no longer available.");
     }
 
     const quantity = Math.max(1, Number(item.quantity || 1));
@@ -193,8 +194,8 @@ function placeDemoOrder(payload) {
   });
 
   const subtotal = items.reduce((sum, item) => sum + item.lineTotal, 0);
-  const shipping = subtotal >= 3999 ? 0 : 149;
-  const tax = Math.round(subtotal * 0.05);
+  const shipping = subtotal >= 1499 ? 0 : 79;
+  const tax = Math.round(subtotal * 0.02);
   const total = subtotal + shipping + tax;
   const order = {
     id: `demo-${Date.now()}`,
@@ -232,7 +233,7 @@ async function placeOrder(event) {
   const checkoutButton = document.getElementById("checkoutButton");
 
   if (!cart.length) {
-    message.textContent = "Your cart is empty.";
+    message.textContent = "Your fruit cart is empty.";
     return;
   }
 
@@ -243,13 +244,13 @@ async function placeOrder(event) {
   const paymentMethod = document.getElementById("paymentMethod").value;
 
   if (!customerName || !customerEmail || !customerPhone || !customerAddress || !paymentMethod) {
-    message.textContent = "Please complete your contact details, address, and payment option.";
+    message.textContent = "Please complete your contact details, address, and payment selection.";
     return;
   }
 
   try {
     checkoutButton.disabled = true;
-    message.textContent = "Submitting your order...";
+    message.textContent = "Submitting your fruit order...";
 
     const payload = {
       customerName,
@@ -285,7 +286,7 @@ async function placeOrder(event) {
     render();
     message.innerHTML = `Order ${order.id.slice(-6).toUpperCase()} confirmed via ${order.paymentMethodLabel}. Total ${formatPrice(order.total)}. <a href="track.html?orderId=${encodeURIComponent(order.id)}&email=${encodeURIComponent(order.customerEmail)}">Track this order</a>.`;
   } catch (error) {
-    message.textContent = error.message || "Could not place order. Please try again.";
+    message.textContent = error.message || "Could not place the order. Please try again.";
   } finally {
     checkoutButton.disabled = false;
   }

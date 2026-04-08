@@ -3,37 +3,37 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>NovaCart | Smart Shopping</title>
+    <title>FruitStock | Fresh Fruit Inventory</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Fraunces:wght@600;700&family=Manrope:wght@400;500;600;700;800&display=swap"
       rel="stylesheet"
     />
     <link rel="stylesheet" href="style.css" />
   </head>
   <body>
     <div class="top-strip">
-      <span>Free shipping above INR 3,999</span>
-      <span id="wishlistSummary">Wishlist 0</span>
-      <span>Trusted checkout with live inventory</span>
+      <span>Fresh fruit stock updated daily</span>
+      <span id="wishlistSummary">Watchlist 0</span>
+      <span>Wholesale-friendly checkout with live inventory</span>
     </div>
 
     <header class="site-header">
       <div class="brand-wrap">
         <span class="brand-dot"></span>
         <div>
-          <h1>NovaCart</h1>
-          <p class="header-subtitle">Modern commerce, simplified</p>
+          <h1>FruitStock</h1>
+          <p class="header-subtitle">Fresh fruit storefront and stock desk</p>
         </div>
       </div>
       <div class="search-wrap">
-        <input id="searchInput" type="search" placeholder="Search products, categories, trends..." />
+        <input id="searchInput" type="search" placeholder="Search mangoes, berries, crates, gift packs..." />
       </div>
       <div class="header-actions">
         <select id="sortSelect" aria-label="Sort products">
-          <option value="featured">Newest</option>
-          <option value="rating">Top Rated</option>
+          <option value="featured">Latest stock</option>
+          <option value="rating">Top rated</option>
           <option value="price-asc">Price: Low to High</option>
           <option value="price-desc">Price: High to Low</option>
           <option value="name">Name A-Z</option>
@@ -49,28 +49,32 @@
       <div class="hero-content">
         <div>
           <p class="hero-tag">Fresh arrivals</p>
-          <h2>More categories, more discovery, and smarter browsing like a real marketplace.</h2>
+          <h2>Run fruit sales with live stock, seasonal picks, and checkout that stays simple.</h2>
           <p>
-            Explore featured deals, filter fast, save favorites, and preview products before you
-            add them to cart.
+            Browse orchard staples, tropical fast movers, and premium fruit hampers in one place.
+            This storefront is tuned for daily stock movement, repeat buyers, and quick admin updates.
           </p>
           <div class="hero-cta-row">
-            <button id="jumpDealsButton" class="ghost-link" type="button">View hot deals</button>
-            <button id="jumpCatalogButton" class="cart-link" type="button">Shop catalog</button>
+            <button id="jumpDealsButton" class="ghost-link" type="button">View featured fruit</button>
+            <button id="jumpCatalogButton" class="cart-link" type="button">Browse full stock</button>
           </div>
         </div>
         <div class="hero-stat-grid">
           <article>
             <strong id="heroProductCount">0</strong>
-            <span>Products</span>
+            <span>Fruit listings</span>
           </article>
           <article>
             <strong id="heroCategoryCount">0</strong>
-            <span>Categories</span>
+            <span>Fruit groups</span>
           </article>
           <article>
             <strong id="heroDealCount">0</strong>
-            <span>Deals live</span>
+            <span>Featured lots</span>
+          </article>
+          <article>
+            <strong>24/7</strong>
+            <span>Admin visibility</span>
           </article>
         </div>
       </div>
@@ -79,29 +83,29 @@
     <main class="main-content">
       <section class="promo-grid">
         <article class="promo-card promo-card-featured">
-          <p class="section-kicker">Big savings</p>
-          <h3>Deal zone</h3>
-          <p>Badged products, trending picks, and fast-moving categories in one place.</p>
+          <p class="section-kicker">Fast movers</p>
+          <h3>Fruit for daily turnover</h3>
+          <p>Highlight the boxes, bunches, and crates that sell fastest across home delivery and retail counters.</p>
         </article>
         <article class="promo-card">
-          <p class="section-kicker">Fast picks</p>
-          <h3>Quick view</h3>
-          <p>Open product details instantly without leaving the homepage flow.</p>
+          <p class="section-kicker">Stock control</p>
+          <h3>Low inventory visibility</h3>
+          <p>Inventory badges show what is plentiful, running low, or already sold through.</p>
         </article>
         <article class="promo-card">
-          <p class="section-kicker">Save for later</p>
-          <h3>Wishlist</h3>
-          <p>Keep track of products you want to revisit before checkout.</p>
+          <p class="section-kicker">Buyer memory</p>
+          <h3>Personal watchlist</h3>
+          <p>Save fruit lots to revisit before placing a bulk or household order.</p>
         </article>
       </section>
 
       <section id="featuredSection" class="collection-block">
         <div class="section-heading">
           <div>
-            <p class="section-kicker">Featured lane</p>
-            <h3>Popular right now</h3>
+            <p class="section-kicker">Featured inventory</p>
+            <h3>Popular fruit this week</h3>
           </div>
-          <p class="results-info">Top-rated and badged picks from across the store.</p>
+          <p class="results-info">Premium picks and quick-selling lines from the current stock sheet.</p>
         </div>
         <div id="featuredRail" class="featured-rail"></div>
       </section>
@@ -109,10 +113,10 @@
       <section id="wishlistSection" class="collection-block hidden">
         <div class="section-heading">
           <div>
-            <p class="section-kicker">Saved products</p>
-            <h3>Your wishlist</h3>
+            <p class="section-kicker">Saved items</p>
+            <h3>Your fruit watchlist</h3>
           </div>
-          <p class="results-info">Quick access to the items you bookmarked.</p>
+          <p class="results-info">Hold onto promising stock lots before you place the order.</p>
         </div>
         <div id="wishlistRail" class="featured-rail"></div>
       </section>
@@ -121,8 +125,8 @@
         <aside class="filter-panel">
           <div class="section-heading compact-heading">
             <div>
-              <p class="section-kicker">Browse smarter</p>
-              <h3>Filters</h3>
+              <p class="section-kicker">Filter stock</p>
+              <h3>Freshness filters</h3>
             </div>
           </div>
 
@@ -133,17 +137,17 @@
 
           <div class="filter-group">
             <label for="maxPriceInput">Maximum price</label>
-            <input id="maxPriceInput" type="number" min="0" placeholder="15000" />
+            <input id="maxPriceInput" type="number" min="0" placeholder="1500" />
           </div>
 
           <label class="check-row">
             <input id="featuredOnlyInput" type="checkbox" />
-            <span>Featured deals only</span>
+            <span>Featured lots only</span>
           </label>
 
           <label class="check-row">
             <input id="stockOnlyInput" type="checkbox" />
-            <span>In-stock items only</span>
+            <span>In-stock only</span>
           </label>
 
           <button id="resetFiltersButton" class="secondary-btn" type="button">Reset filters</button>
@@ -175,7 +179,7 @@
           <p id="modalInventory" class="results-info"></p>
           <div class="modal-actions">
             <button id="modalCartButton" class="primary-btn" type="button">Add to cart</button>
-            <button id="modalWishlistButton" class="secondary-btn" type="button">Save to wishlist</button>
+            <button id="modalWishlistButton" class="secondary-btn" type="button">Save to watchlist</button>
           </div>
         </div>
       </div>
@@ -185,7 +189,7 @@
       <article class="product-card">
         <div class="card-image-wrap">
           <span class="badge"></span>
-          <button type="button" class="wishlist-btn" aria-label="Toggle wishlist">♡</button>
+          <button type="button" class="wishlist-btn" aria-label="Toggle watchlist">?</button>
           <img alt="" loading="lazy" />
         </div>
         <div class="card-body">

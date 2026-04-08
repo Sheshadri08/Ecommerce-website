@@ -1,0 +1,184 @@
+.admin-shell {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 28px 24px 48px;
+}
+
+.hidden {
+  display: none;
+}
+
+.auth-panel {
+  max-width: 560px;
+  padding: 28px;
+  margin: 36px auto 0;
+}
+
+.credential-note {
+  margin-top: 18px;
+  padding: 14px 16px;
+  border-radius: 16px;
+  background: var(--surface-2);
+  display: grid;
+  gap: 4px;
+}
+
+.metrics-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+.metric-card {
+  padding: 18px;
+}
+
+.metric-card span {
+  color: var(--muted);
+}
+
+.metric-card strong {
+  display: block;
+  margin-top: 10px;
+  font-size: 2rem;
+}
+
+.admin-layout {
+  display: grid;
+  grid-template-columns: 1.2fr 0.9fr;
+  gap: 20px;
+}
+
+.panel {
+  padding: 22px;
+}
+
+.panel-heading {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  align-items: center;
+  margin-bottom: 18px;
+}
+
+.panel-heading h3,
+.split-panels h4 {
+  margin: 0;
+}
+
+.product-form {
+  display: grid;
+  gap: 10px;
+  margin-bottom: 18px;
+}
+
+.checkbox-row {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  color: var(--muted);
+}
+
+.data-table-wrap {
+  overflow: auto;
+}
+
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.data-table th,
+.data-table td {
+  padding: 12px 10px;
+  border-bottom: 1px solid var(--line);
+  text-align: left;
+  vertical-align: top;
+}
+
+.data-table th {
+  color: var(--muted);
+  font-size: 0.86rem;
+}
+
+.table-actions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.table-action {
+  padding: 8px 12px;
+}
+
+.table-action.danger {
+  color: var(--danger);
+  border-color: #f3c4bc;
+  background: #fff4f1;
+}
+
+.split-panels {
+  display: grid;
+  gap: 18px;
+}
+
+.selected-order {
+  padding: 16px;
+  background: var(--surface-2);
+  border: 1px solid var(--line);
+  border-radius: 16px;
+}
+
+.empty-order {
+  color: var(--muted);
+}
+
+.order-item-list {
+  margin: 12px 0 0;
+  padding-left: 18px;
+}
+
+.order-item-list li {
+  margin: 6px 0;
+}
+
+.selected-order p {
+  margin: 8px 0;
+  overflow-wrap: anywhere;
+}
+
+.status-select {
+  min-width: 130px;
+  padding: 8px 10px;
+  border-radius: 10px;
+  border: 1px solid var(--line);
+  background: #fff;
+}
+
+.stock-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: 10px;
+}
+
+.stock-list li {
+  padding: 14px 16px;
+  background: var(--surface-2);
+  border: 1px solid var(--line);
+  border-radius: 16px;
+}
+
+.stock-list strong,
+.stock-list span {
+  display: block;
+}
+
+@media (max-width: 980px) {
+  .metrics-grid,
+  .admin-layout {
+    grid-template-columns: 1fr;
+  }
+}

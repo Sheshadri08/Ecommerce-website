@@ -1,6 +1,6 @@
-const CART_KEY = "novacart_cart_v1";
-const WISHLIST_KEY = "novacart_wishlist_v1";
-const DEMO_PRODUCTS_KEY = "novacart_demo_products_v1";
+const CART_KEY = "fruitstock_cart_v1";
+const WISHLIST_KEY = "fruitstock_watchlist_v1";
+const DEMO_PRODUCTS_KEY = "fruitstock_demo_products_v1";
 const CONFIG = window.NOVACART_CONFIG || {};
 const API_BASE_URL = (CONFIG.API_BASE_URL || "").replace(/\/$/, "");
 const ADMIN_URL = CONFIG.ADMIN_URL || (API_BASE_URL ? `${API_BASE_URL}/admin/` : "/admin/");
@@ -119,7 +119,7 @@ function updateCartCount() {
 
 function updateWishlistSummary() {
   const count = getWishlist().length;
-  document.getElementById("wishlistSummary").textContent = `Wishlist ${count}`;
+  document.getElementById("wishlistSummary").textContent = `Watchlist ${count}`;
 }
 
 function setStatusMessage(message, isError = false) {
@@ -130,7 +130,7 @@ function setStatusMessage(message, isError = false) {
 
 function addToCart(product) {
   if (product.inventory <= 0) {
-    setStatusMessage("This product is currently out of stock.", true);
+    setStatusMessage("This fruit lot is sold out right now.", true);
     return;
   }
 
@@ -151,7 +151,7 @@ function addToCart(product) {
 
   saveCart(cart);
   updateCartCount();
-  setStatusMessage(`${product.name} added to cart.`);
+  setStatusMessage(`${product.name} added to your fruit cart.`);
 }
 
 function toggleWishlist(productId) {
@@ -195,6 +195,12 @@ function renderCategoryChips() {
   });
 }
 
+function inventoryLabel(product) {
+  if (product.inventory <= 0) return "Sold out";
+  if (product.inventory <= 5) return `${product.inventory} trays left`;
+  return `${product.inventory} ready today`;
+}
+
 function createProductCard(product) {
   const template = document.getElementById("productTemplate");
   const clone = template.content.cloneNode(true);
@@ -209,7 +215,7 @@ function createProductCard(product) {
   clone.querySelector(".category").textContent = product.category;
   clone.querySelector("h3").textContent = product.name;
   clone.querySelector(".description").textContent = product.description;
-  clone.querySelector(".rating").textContent = `Rating ${Number(product.rating).toFixed(1)}`;
+  clone.querySelector(".rating").textContent = `Freshness ${Number(product.rating).toFixed(1)}`;
   clone.querySelector(".price").textContent = formatPrice(product.price);
 
   if (product.badge) {
@@ -218,7 +224,7 @@ function createProductCard(product) {
     badge.style.display = "none";
   }
 
-  inventoryPill.textContent = product.inventory > 0 ? `${product.inventory} in stock` : "Out of stock";
+  inventoryPill.textContent = inventoryLabel(product);
   inventoryPill.classList.toggle("inventory-low", product.inventory > 0 && product.inventory <= 5);
   inventoryPill.classList.toggle("inventory-empty", product.inventory <= 0);
 
@@ -242,13 +248,13 @@ function renderProducts(products) {
   const info = document.getElementById("resultsInfo");
   grid.innerHTML = "";
 
-  info.textContent = `Showing ${products.length} product${products.length !== 1 ? "s" : ""}`;
+  info.textContent = `Showing ${products.length} fruit listing${products.length !== 1 ? "s" : ""}`;
 
   if (!products.length) {
     grid.innerHTML = `
       <div class="empty-state">
-        <h3>No products match this filter</h3>
-        <p>Try a different search term or widen your price range.</p>
+        <h3>No fruit listings match this filter</h3>
+        <p>Try another category, wider price range, or remove the featured-only filter.</p>
       </div>
     `;
     return;
@@ -269,7 +275,7 @@ function renderFeaturedRail() {
     card.innerHTML = `
       <img src="${product.image}" alt="${product.name}" />
       <div>
-        <p class="section-kicker">${product.badge || "Top pick"}</p>
+        <p class="section-kicker">${product.badge || "Top lot"}</p>
         <h4>${product.name}</h4>
         <p>${formatPrice(product.price)}</p>
       </div>
@@ -315,7 +321,7 @@ function syncModalWishlistButton() {
   const button = document.getElementById("modalWishlistButton");
   const product = selectedProduct();
   if (!product) return;
-  button.textContent = isWishlisted(product.id) ? "Saved in wishlist" : "Save to wishlist";
+  button.textContent = isWishlisted(product.id) ? "Saved to watchlist" : "Save to watchlist";
 }
 
 function openProductModal(productId) {
@@ -329,9 +335,9 @@ function openProductModal(productId) {
   document.getElementById("modalName").textContent = product.name;
   document.getElementById("modalDescription").textContent = product.description;
   document.getElementById("modalPrice").textContent = formatPrice(product.price);
-  document.getElementById("modalRating").textContent = `Rating ${Number(product.rating).toFixed(1)}`;
+  document.getElementById("modalRating").textContent = `Freshness ${Number(product.rating).toFixed(1)}`;
   document.getElementById("modalInventory").textContent =
-    product.inventory > 0 ? `${product.inventory} units available` : "Currently out of stock";
+    product.inventory > 0 ? `${product.inventory} unit(s) available for dispatch today` : "Currently sold out";
   document.getElementById("modalCartButton").disabled = product.inventory <= 0;
   document.getElementById("productModal").showModal();
   syncModalWishlistButton();
@@ -383,7 +389,7 @@ async function loadInitialProducts() {
 }
 
 async function loadProducts() {
-  setStatusMessage("Loading products...");
+  setStatusMessage("Loading fresh stock...");
 
   try {
     const response = await fetch(apiUrl(`/api/products?${buildSearchParams().toString()}`));
@@ -408,7 +414,7 @@ async function loadProducts() {
     document.getElementById("heroDealCount").textContent = String(
       state.allProducts.filter((product) => product.badge).length
     );
-    setStatusMessage("Catalog synced.");
+    setStatusMessage("Live stock synced.");
   } catch (error) {
     state.allProducts = getDemoProducts();
     state.categories = getDemoCategories(state.allProducts);
@@ -418,7 +424,7 @@ async function loadProducts() {
     document.getElementById("heroDealCount").textContent = String(
       state.allProducts.filter((product) => product.badge).length
     );
-    setStatusMessage("Catalog loaded in GitHub demo mode.");
+    setStatusMessage("Demo stock loaded from local catalog.");
   }
 
   renderCategoryChips();
@@ -446,8 +452,8 @@ function resetFilters() {
 
   renderCategoryChips();
   loadProducts().catch(() => {
-    document.getElementById("resultsInfo").textContent = "Unable to load products.";
-    setStatusMessage("Could not refresh the catalog.", true);
+    document.getElementById("resultsInfo").textContent = "Unable to load fruit listings.";
+    setStatusMessage("Could not refresh the stock board.", true);
   });
 }
 
@@ -455,8 +461,8 @@ function queueProductReload() {
   window.clearTimeout(searchTimer);
   searchTimer = window.setTimeout(() => {
     loadProducts().catch(() => {
-      document.getElementById("resultsInfo").textContent = "Unable to load products.";
-      setStatusMessage("Could not refresh the catalog.", true);
+      document.getElementById("resultsInfo").textContent = "Unable to load fruit listings.";
+      setStatusMessage("Could not refresh the stock board.", true);
     });
   }, 180);
 }
@@ -527,8 +533,8 @@ async function init() {
     await loadInitialProducts();
     await loadProducts();
   } catch (error) {
-    document.getElementById("resultsInfo").textContent = "Unable to load products.";
-    setStatusMessage("Catalog unavailable.", true);
+    document.getElementById("resultsInfo").textContent = "Unable to load fruit listings.";
+    setStatusMessage("Stock board unavailable.", true);
   }
 }
 

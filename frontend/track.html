@@ -3,36 +3,36 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>NovaCart | Track Order</title>
+    <title>FruitStock | Track Order</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Fraunces:wght@600;700&family=Manrope:wght@400;500;600;700;800&display=swap"
       rel="stylesheet"
     />
     <link rel="stylesheet" href="style.css" />
   </head>
   <body>
     <div class="top-strip">
-      <span>Track your latest NovaCart delivery</span>
-      <span>Use your order ID and email</span>
-      <span>Realtime status when backend is live</span>
+      <span>Track your latest FruitStock order</span>
+      <span>Use your order ID and checkout email</span>
+      <span>Live status when the backend is connected</span>
     </div>
 
     <header class="site-header">
       <div class="brand-wrap">
         <span class="brand-dot"></span>
         <div>
-          <h1>NovaCart</h1>
+          <h1>FruitStock</h1>
           <p class="header-subtitle">Order tracking</p>
         </div>
       </div>
       <div class="search-wrap">
-        <input type="text" disabled value="Track your order status" />
+        <input type="text" disabled value="Track your fruit delivery" />
       </div>
       <div class="header-actions">
         <a class="ghost-link" href="login.html">Login</a>
-        <a class="ghost-link" href="index.html">Shop</a>
+        <a class="ghost-link" href="index.html">Shop Fruit</a>
         <a class="ghost-link" href="cart.html">Cart</a>
       </div>
     </header>
@@ -42,16 +42,16 @@
         <div class="hero-content">
           <div>
             <p class="hero-tag">Delivery updates</p>
-            <h2>Check where your order stands in a few seconds.</h2>
+            <h2>Check your fruit order status in a few seconds.</h2>
             <p>
-              Enter the order ID from your confirmation and the email used at checkout to view
-              payment, delivery address, line items, and the latest status.
+              Enter the order ID from your confirmation along with the email used at checkout to view
+              payment details, delivery address, line items, and the latest dispatch status.
             </p>
           </div>
           <div class="track-help-card">
             <p class="section-kicker">Tip</p>
-            <h3>Order ID format</h3>
-            <p>Your confirmation message includes the order reference. Paste the full order ID here.</p>
+            <h3>Keep the order code handy</h3>
+            <p>Your confirmation message includes the full order reference needed for lookup.</p>
           </div>
         </div>
       </section>
@@ -61,7 +61,7 @@
           <div class="section-heading compact-heading">
             <div>
               <p class="section-kicker">Lookup</p>
-              <h3>Track an order</h3>
+              <h3>Track a fruit order</h3>
             </div>
           </div>
 
@@ -75,9 +75,9 @@
         </section>
 
         <aside id="trackResult" class="order-summary track-result hidden">
-          <h3>Order Details</h3>
+          <h3>Order details</h3>
           <div id="trackStatusPill" class="track-status-pill"></div>
-          <div class="summary-line"><span>Order ID</span><span id="trackOrderCode">-</span></div>
+          <div class="summary-line"><span>Order code</span><span id="trackOrderCode">-</span></div>
           <div class="summary-line"><span>Placed</span><span id="trackPlacedAt">-</span></div>
           <div class="summary-line"><span>Payment</span><span id="trackPayment">-</span></div>
           <div class="summary-line"><span>Total</span><span id="trackTotal">-</span></div>

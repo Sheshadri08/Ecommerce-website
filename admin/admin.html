@@ -3,41 +3,41 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>NovaCart Admin</title>
+    <title>FruitStock Admin</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Fraunces:wght@600;700&family=Manrope:wght@400;500;600;700;800&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="../frontend/style.css" />
-    <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="../frontend/style.css?v=20260408b" />
+    <link rel="stylesheet" href="style.css?v=20260408b" />
   </head>
   <body>
     <header class="site-header admin-header">
       <div class="brand-wrap">
         <span class="brand-dot"></span>
         <div>
-          <h1>NovaCart Admin</h1>
-          <p class="header-subtitle">Catalog and order control center</p>
+          <h1>FruitStock Admin</h1>
+          <p class="header-subtitle">Catalog, orders, and live stock control</p>
         </div>
       </div>
       <div class="search-wrap">
-        <input id="adminSearch" type="search" placeholder="Search product table..." />
+        <input id="adminSearch" type="search" placeholder="Search fruit table..." />
       </div>
       <div class="header-actions">
         <a class="ghost-link" data-store-link href="../frontend/index.html">Storefront</a>
-        <button id="logoutButton" class="secondary-btn" type="button">Log Out</button>
+        <button id="logoutButton" class="secondary-btn hidden" type="button">Log Out</button>
       </div>
     </header>
 
     <main class="admin-shell">
       <section id="loginPanel" class="panel auth-panel">
         <div>
-          <p class="section-kicker">Admin Access</p>
-          <h2>Sign in to manage products and orders</h2>
+          <p class="section-kicker">Admin access</p>
+          <h2>Sign in to manage fruit inventory and customer orders</h2>
           <p class="results-info">
-            Use the seeded admin account or your configured admin credentials.
+            Use the seeded admin account or your configured admin credentials to access the stock desk.
           </p>
         </div>
 
@@ -57,7 +57,7 @@
       <section id="dashboardPanel" class="dashboard hidden">
         <div class="metrics-grid">
           <article class="metric-card">
-            <span>Products</span>
+            <span>Fruit listings</span>
             <strong id="metricProducts">0</strong>
           </article>
           <article class="metric-card">
@@ -65,7 +65,7 @@
             <strong id="metricOrders">0</strong>
           </article>
           <article class="metric-card">
-            <span>Users</span>
+            <span>Buyers</span>
             <strong id="metricUsers">0</strong>
           </article>
           <article class="metric-card">
@@ -79,14 +79,14 @@
             <div class="panel-heading">
               <div>
                 <p class="section-kicker">Catalog</p>
-                <h3>Products</h3>
+                <h3>Fruit inventory</h3>
               </div>
-              <button id="resetFormButton" class="table-action" type="button">New Product</button>
+              <button id="resetFormButton" class="table-action" type="button">New Listing</button>
             </div>
 
             <form id="productForm" class="product-form">
               <input id="productId" type="hidden" />
-              <input id="productName" placeholder="Product name" required />
+              <input id="productName" placeholder="Fruit or pack name" required />
               <input id="productCategory" placeholder="Category" required />
               <input id="productPrice" type="number" min="0" placeholder="Price" required />
               <input id="productImage" placeholder="Image URL" required />
@@ -96,9 +96,9 @@
               <input id="productInventory" type="number" min="0" placeholder="Inventory" required />
               <label class="checkbox-row">
                 <input id="productFeatured" type="checkbox" />
-                <span>Feature this product</span>
+                <span>Feature this listing</span>
               </label>
-              <button class="primary-btn" type="submit">Save Product</button>
+              <button class="primary-btn" type="submit">Save Listing</button>
             </form>
 
             <p id="productMessage" class="status-text"></p>
@@ -123,7 +123,7 @@
             <div class="panel-heading">
               <div>
                 <p class="section-kicker">Operations</p>
-                <h3>Orders</h3>
+                <h3>Order management</h3>
               </div>
               <button id="refreshOrdersButton" class="table-action" type="button">Refresh</button>
             </div>
@@ -132,7 +132,7 @@
 
             <div class="split-panels">
               <div>
-                <h4>Recent Orders</h4>
+                <h4>Recent orders</h4>
                 <div class="data-table-wrap">
                   <table class="data-table">
                     <thead>
@@ -149,16 +149,16 @@
               </div>
 
               <div>
-                <h4>Low Stock</h4>
+                <h4>Low stock</h4>
                 <ul id="lowStockList" class="stock-list"></ul>
               </div>
             </div>
 
             <div class="split-panels">
               <div>
-                <h4>Order Details</h4>
+                <h4>Selected order</h4>
                 <div id="selectedOrderCard" class="selected-order empty-order">
-                  Select an order to review its items and customer details.
+                  Select an order to review customer details, payment choice, and fruit quantities.
                 </div>
               </div>
             </div>
@@ -167,8 +167,8 @@
       </section>
     </main>
 
-    <script src="config.js"></script>
-    <script src="../frontend/catalog.js"></script>
-    <script src="app.js"></script>
+    <script src="config.js?v=20260408b"></script>
+    <script src="../frontend/catalog.js?v=20260408b"></script>
+    <script src="app.js?v=20260408b"></script>
   </body>
 </html>
