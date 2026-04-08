@@ -9,11 +9,12 @@
     window.localStorage.setItem(STORAGE_KEY, configuredApi);
   }
 
+  const localApi = inferLocalApiBaseUrl();
   const apiBaseUrl =
     configuredApi ||
+    localApi ||
     storedApi ||
-    defaultApi ||
-    inferLocalApiBaseUrl();
+    defaultApi;
 
   window.NOVACART_CONFIG = {
     API_BASE_URL: apiBaseUrl,
