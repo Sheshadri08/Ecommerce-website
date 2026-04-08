@@ -615,6 +615,38 @@ select,
   align-items: start;
 }
 
+.auth-hero {
+  padding: 0 0 18px;
+}
+
+.auth-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 340px;
+  gap: 18px;
+  align-items: start;
+}
+
+.auth-card {
+  max-width: 620px;
+  margin: 0 auto;
+  padding: 22px;
+}
+
+.auth-summary {
+  display: grid;
+  gap: 14px;
+}
+
+.auth-toggle {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 14px;
+}
+
+.auth-toggle .chip {
+  border-radius: 999px;
+}
+
 .track-panel {
   padding: 20px;
 }
@@ -663,6 +695,7 @@ select,
   .site-header,
   .hero-content,
   .cart-layout,
+  .auth-layout,
   .toolbar,
   .page-heading,
   .catalog-shell,

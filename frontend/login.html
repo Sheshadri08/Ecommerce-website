@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>NovaCart | Login</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div class="top-strip">
+      <span>Welcome back to NovaCart</span>
+      <span>Sign in or create an account</span>
+      <span>Faster checkout and order tracking</span>
+    </div>
+
+    <header class="site-header">
+      <div class="brand-wrap">
+        <span class="brand-dot"></span>
+        <div>
+          <h1>NovaCart</h1>
+          <p class="header-subtitle">Customer account</p>
+        </div>
+      </div>
+      <div class="search-wrap">
+        <input type="text" disabled value="Account access" />
+      </div>
+      <div class="header-actions">
+        <a class="ghost-link" href="index.html">Shop</a>
+        <a class="ghost-link" href="track.html">Track Order</a>
+        <a class="cart-link" href="cart.html">Cart</a>
+      </div>
+    </header>
+
+    <main class="cart-page">
+      <section class="hero auth-hero">
+        <div class="hero-content">
+          <div>
+            <p class="hero-tag">Member access</p>
+            <h2>Sign in for a smoother shopping flow.</h2>
+            <p>
+              Save your customer details for checkout, come back to track orders faster, and keep your
+              shopping journey in one place.
+            </p>
+          </div>
+          <div class="track-help-card">
+            <p class="section-kicker">Included</p>
+            <h3>Account benefits</h3>
+            <p>Faster checkout, saved identity details, and simpler access to your order activity.</p>
+          </div>
+        </div>
+      </section>
+
+      <div class="auth-layout">
+        <section class="panel auth-card">
+          <div class="auth-toggle">
+            <button id="showLoginButton" class="chip active" type="button">Sign In</button>
+            <button id="showRegisterButton" class="chip" type="button">Create Account</button>
+          </div>
+
+          <form id="loginForm" class="checkout-form">
+            <input id="loginEmail" type="email" placeholder="Email address" required />
+            <input id="loginPassword" type="password" placeholder="Password" required />
+            <button class="primary-btn" type="submit">Sign In</button>
+          </form>
+
+          <form id="registerForm" class="checkout-form hidden">
+            <input id="registerName" placeholder="Full name" required />
+            <input id="registerEmail" type="email" placeholder="Email address" required />
+            <input id="registerPassword" type="password" placeholder="Create password" required />
+            <button class="primary-btn" type="submit">Create Account</button>
+          </form>
+
+          <p id="authMessage" class="status-text"></p>
+        </section>
+
+        <aside class="order-summary auth-summary">
+          <h3>Your Session</h3>
+          <div id="guestState">
+            <p class="results-info">You are not signed in yet.</p>
+          </div>
+          <div id="signedInState" class="hidden">
+            <div class="track-block">
+              <strong>Name</strong>
+              <p id="sessionName" class="results-info"></p>
+            </div>
+            <div class="track-block">
+              <strong>Email</strong>
+              <p id="sessionEmail" class="results-info"></p>
+            </div>
+            <button id="logoutUserButton" class="secondary-btn" type="button">Log Out</button>
+          </div>
+        </aside>
+      </div>
+    </main>
+
+    <script src="config.js"></script>
+    <script src="login.js"></script>
+  </body>
+</html>

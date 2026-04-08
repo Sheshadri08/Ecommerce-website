@@ -2,6 +2,7 @@ const CART_KEY = "novacart_cart_v1";
 const DEMO_PRODUCTS_KEY = "novacart_demo_products_v1";
 const DEMO_ORDERS_KEY = "novacart_demo_orders_v1";
 const LAST_ORDER_KEY = "novacart_last_order_lookup_v1";
+const CUSTOMER_SESSION_KEY = "novacart_customer_session_v1";
 const CONFIG = window.NOVACART_CONFIG || {};
 const API_BASE_URL = (CONFIG.API_BASE_URL || "").replace(/\/$/, "");
 const ADMIN_URL = CONFIG.ADMIN_URL || (API_BASE_URL ? `${API_BASE_URL}/admin/` : "/admin/");
@@ -69,6 +70,26 @@ function saveLastOrderLookup(order) {
       customerEmail: order.customerEmail,
     })
   );
+}
+
+function getCustomerSession() {
+  return JSON.parse(localStorage.getItem(CUSTOMER_SESSION_KEY) || "null");
+}
+
+function hydrateCustomerDetails() {
+  const session = getCustomerSession();
+  if (!session) return;
+
+  const nameInput = document.getElementById("customerName");
+  const emailInput = document.getElementById("customerEmail");
+
+  if (nameInput && !nameInput.value) {
+    nameInput.value = session.name || "";
+  }
+
+  if (emailInput && !emailInput.value) {
+    emailInput.value = session.email || "";
+  }
 }
 
 function calculateTotals(cart) {
@@ -282,6 +303,7 @@ function setup() {
   });
 
   render();
+  hydrateCustomerDetails();
 
   document.getElementById("checkoutForm").addEventListener("submit", placeOrder);
   document.getElementById("clearCartBtn").addEventListener("click", () => {
