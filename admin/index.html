@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>NovaCart Admin</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Fraunces:wght@600;700&family=Manrope:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="../frontend/style.css?v=20260408b" />
+    <link rel="stylesheet" href="style.css?v=20260408b" />
+  </head>
+  <body>
+    <header class="site-header admin-header">
+      <div class="brand-wrap">
+        <span class="brand-dot"></span>
+        <div>
+          <h1>NovaCart Admin</h1>
+          <p class="header-subtitle">Catalog, orders, and live inventory control</p>
+        </div>
+      </div>
+      <div class="search-wrap">
+        <input id="adminSearch" type="search" placeholder="Search catalog..." />
+      </div>
+      <div class="header-actions">
+        <a class="ghost-link" data-store-link href="../frontend/index.html">Storefront</a>
+        <button id="logoutButton" class="secondary-btn hidden" type="button">Log Out</button>
+      </div>
+    </header>
+
+    <main class="admin-shell">
+      <section id="loginPanel" class="panel auth-panel">
+        <div>
+          <p class="section-kicker">Admin access</p>
+          <h2>Sign in to manage NovaCart inventory and customer orders</h2>
+          <p class="results-info">
+            Use the seeded admin account or your configured admin credentials to access the admin dashboard.
+          </p>
+        </div>
+
+        <form id="loginForm" class="checkout-form">
+          <input id="loginEmail" type="email" placeholder="Admin email" required />
+          <input id="loginPassword" type="password" placeholder="Password" required />
+          <button class="primary-btn" type="submit">Sign In</button>
+        </form>
+
+        <div class="credential-note">
+          <strong>Default seed credentials</strong>
+          <span id="credentialHint">admin@gmail.com / 1234567890</span>
+        </div>
+        <p id="loginMessage" class="status-text"></p>
+      </section>
+
+      <section id="dashboardPanel" class="dashboard hidden">
+        <div class="metrics-grid">
+          <article class="metric-card">
+            <span>Product listings</span>
+            <strong id="metricProducts">0</strong>
+          </article>
+          <article class="metric-card">
+            <span>Orders</span>
+            <strong id="metricOrders">0</strong>
+          </article>
+          <article class="metric-card">
+            <span>Buyers</span>
+            <strong id="metricUsers">0</strong>
+          </article>
+          <article class="metric-card">
+            <span>Revenue</span>
+            <strong id="metricRevenue">INR 0</strong>
+          </article>
+        </div>
+
+        <div class="admin-layout">
+          <section class="panel">
+            <div class="panel-heading">
+              <div>
+                <p class="section-kicker">Catalog</p>
+                <h3>Catalog inventory</h3>
+              </div>
+              <button id="resetFormButton" class="table-action" type="button">New Listing</button>
+            </div>
+
+            <form id="productForm" class="product-form">
+              <input id="productId" type="hidden" />
+              <input id="productName" placeholder="Product name" required />
+              <input id="productCategory" placeholder="Category" required />
+              <input id="productPrice" type="number" min="0" placeholder="Price" required />
+              <input id="productImage" placeholder="Image URL" required />
+              <textarea id="productDescription" rows="4" placeholder="Description" required></textarea>
+              <input id="productBadge" placeholder="Badge (optional)" />
+              <input id="productRating" type="number" min="0" max="5" step="0.1" placeholder="Rating" />
+              <input id="productInventory" type="number" min="0" placeholder="Inventory" required />
+              <label class="checkbox-row">
+                <input id="productFeatured" type="checkbox" />
+                <span>Feature this listing</span>
+              </label>
+              <button class="primary-btn" type="submit">Save Listing</button>
+            </form>
+
+            <p id="productMessage" class="status-text"></p>
+
+            <div class="data-table-wrap">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>Name</th>
+                    <th>Category</th>
+                    <th>Price</th>
+                    <th>Inventory</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="productsTableBody"></tbody>
+              </table>
+            </div>
+          </section>
+
+          <section class="panel">
+            <div class="panel-heading">
+              <div>
+                <p class="section-kicker">Operations</p>
+                <h3>Order management</h3>
+              </div>
+              <button id="refreshOrdersButton" class="table-action" type="button">Refresh</button>
+            </div>
+
+            <p id="dashboardMessage" class="status-text"></p>
+
+            <div class="split-panels">
+              <div>
+                <h4>Recent orders</h4>
+                <div class="data-table-wrap">
+                  <table class="data-table">
+                    <thead>
+                      <tr>
+                        <th>Customer</th>
+                        <th>Items</th>
+                        <th>Total</th>
+                        <th>Status</th>
+                      </tr>
+                    </thead>
+                    <tbody id="ordersTableBody"></tbody>
+                  </table>
+                </div>
+              </div>
+
+              <div>
+                <h4>Low stock</h4>
+                <ul id="lowStockList" class="stock-list"></ul>
+              </div>
+            </div>
+
+            <div class="split-panels">
+              <div>
+                <h4>Selected order</h4>
+                <div id="selectedOrderCard" class="selected-order empty-order">
+                  Select an order to review customer details, payment choice, and item quantities.
+                </div>
+              </div>
+            </div>
+          </section>
+        </div>
+      </section>
+    </main>
+
+    <script src="config.js?v=20260408b"></script>
+    <script src="../frontend/catalog.js?v=20260408b"></script>
+    <script src="app.js?v=20260408b"></script>
+  </body>
+</html>

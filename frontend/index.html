@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>NovaCart | Online Storefront</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Fraunces:wght@600;700&family=Manrope:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="brand-wrap">
+        <span class="brand-dot"></span>
+        <div>
+          <h1>NovaCart</h1>
+          <p class="header-subtitle">Delivering value every day</p>
+        </div>
+      </div>
+      <div class="search-wrap">
+        <input id="searchInput" type="search" placeholder="Search groceries, fruit boxes, pantry items, snacks..." />
+      </div>
+      <div class="header-actions">
+        <select id="sortSelect" aria-label="Sort products">
+          <option value="featured">Featured</option>
+          <option value="rating">Top rated</option>
+          <option value="price-asc">Price: Low to High</option>
+          <option value="price-desc">Price: High to Low</option>
+          <option value="name">Name A-Z</option>
+        </select>
+        <a class="ghost-link" href="login.html">Login</a>
+        <a class="ghost-link" data-admin-link href="../admin/">Admin Panel</a>
+        <a class="ghost-link" href="track.html">Track Order</a>
+        <a class="cart-link" href="cart.html">Cart <span id="cartCount">0</span></a>
+      </div>
+    </header>
+
+    <div class="top-strip">
+      <span>Free delivery above INR 1499</span>
+      <span>Daily deals and featured picks</span>
+      <span>Track every order</span>
+      <span id="wishlistSummary">Watchlist 0</span>
+    </div>
+
+    <nav class="market-nav" aria-label="Shopping shortcuts">
+      <button id="jumpCatalogButton" class="market-nav-link market-nav-link-strong" type="button">All products</button>
+      <button id="jumpDealsButton" class="market-nav-link" type="button">Today's deals</button>
+      <span class="market-nav-text">Fresh fruit</span>
+      <span class="market-nav-text">Pantry staples</span>
+      <span class="market-nav-text">Gift packs</span>
+      <span class="market-nav-text">Best sellers</span>
+    </nav>
+
+    <section class="hero">
+      <div class="hero-content">
+        <div class="hero-copy">
+          <p class="hero-tag">Seasonal savings</p>
+          <h2>Shop fresh picks, pantry favorites, and everyday essentials in one place.</h2>
+          <p>
+            Find value picks, premium bundles, and customer favorites with a storefront designed for quick search, easy comparison, and fast checkout.
+          </p>
+          <div class="hero-badges">
+            <span>Great prices</span>
+            <span>Fast reorder flow</span>
+            <span>Saved favorites</span>
+          </div>
+          <div class="hero-cta-row">
+            <button class="cart-link" type="button" onclick="document.getElementById('catalogSection').scrollIntoView({ behavior: 'smooth' })">Start shopping</button>
+            <button class="ghost-link" type="button" onclick="document.getElementById('featuredSection').scrollIntoView({ behavior: 'smooth' })">Explore deals</button>
+          </div>
+        </div>
+        <div class="hero-panel">
+          <article class="hero-tile">
+            <p class="section-kicker">Browse more</p>
+            <h3><strong id="heroProductCount">0</strong> products in stock</h3>
+            <p>Search across fast movers, fresh arrivals, and featured picks.</p>
+          </article>
+          <article class="hero-tile">
+            <p class="section-kicker">Shop by type</p>
+            <h3><strong id="heroCategoryCount">0</strong> curated categories</h3>
+            <p>Move quickly from discovery to cart with filters that stay simple.</p>
+          </article>
+          <article class="hero-tile">
+            <p class="section-kicker">Today's picks</p>
+            <h3><strong id="heroDealCount">0</strong> featured deals</h3>
+            <p>Popular items, bundles, and highlights customers notice first.</p>
+          </article>
+          <article class="hero-tile hero-tile-accent">
+            <p class="section-kicker">Trusted checkout</p>
+            <h3>Order today and track with ease.</h3>
+            <p>Clear totals, multiple payment options, and live status updates after purchase.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <main class="main-content">
+      <section class="promo-shelf">
+        <article class="promo-shelf-card">
+          <p class="section-kicker">Deals of the day</p>
+          <h3>Top-value picks to add fast</h3>
+          <p>Featured products and quick wins customers usually notice first.</p>
+        </article>
+        <article class="promo-shelf-card">
+          <p class="section-kicker">Easy repeat buying</p>
+          <h3>Save favorites to your watchlist</h3>
+          <p>Keep the products you want nearby while you compare and decide.</p>
+        </article>
+        <article class="promo-shelf-card">
+          <p class="section-kicker">Smooth delivery flow</p>
+          <h3>Checkout, pay, and track</h3>
+          <p>Everything from cart to order tracking stays in one connected flow.</p>
+        </article>
+      </section>
+
+      <section class="promo-grid">
+        <article class="promo-card promo-card-featured">
+          <p class="section-kicker">Daily essentials</p>
+          <h3>Fresh picks for everyday baskets</h3>
+          <p>Give shoppers the quick-start products they expect on a marketplace homepage.</p>
+        </article>
+        <article class="promo-card">
+          <p class="section-kicker">Smart discovery</p>
+          <h3>Search, sort, and narrow results</h3>
+          <p>Help customers find products fast with strong utility controls up front.</p>
+        </article>
+        <article class="promo-card">
+          <p class="section-kicker">Confident buying</p>
+          <h3>Visible stock, prices, and favorites</h3>
+          <p>Keep key buying signals clear so the store feels fast, useful, and trustworthy.</p>
+        </article>
+      </section>
+
+      <section id="featuredSection" class="collection-block">
+        <div class="section-heading">
+          <div>
+            <p class="section-kicker">Featured collection</p>
+            <h3>Best sellers and trending products</h3>
+          </div>
+          <p class="results-info">A quick way to discover the most interesting items in the store right now.</p>
+        </div>
+        <div id="featuredRail" class="featured-rail"></div>
+      </section>
+
+      <section id="wishlistSection" class="collection-block hidden">
+        <div class="section-heading">
+          <div>
+            <p class="section-kicker">Saved items</p>
+            <h3>Your watchlist</h3>
+          </div>
+          <p class="results-info">Return to the products you saved and move them into the cart when you are ready.</p>
+        </div>
+        <div id="wishlistRail" class="featured-rail"></div>
+      </section>
+
+      <section id="catalogSection" class="catalog-shell">
+        <aside class="filter-panel">
+          <div class="section-heading compact-heading">
+            <div>
+              <p class="section-kicker">Refine results</p>
+              <h3>Shop filters</h3>
+            </div>
+          </div>
+
+          <div class="filter-group">
+            <label for="minPriceInput">Minimum price</label>
+            <input id="minPriceInput" type="number" min="0" placeholder="0" />
+          </div>
+
+          <div class="filter-group">
+            <label for="maxPriceInput">Maximum price</label>
+            <input id="maxPriceInput" type="number" min="0" placeholder="1500" />
+          </div>
+
+          <label class="check-row">
+            <input id="featuredOnlyInput" type="checkbox" />
+            <span>Featured only</span>
+          </label>
+
+          <label class="check-row">
+            <input id="stockOnlyInput" type="checkbox" />
+            <span>In-stock only</span>
+          </label>
+
+          <button id="resetFiltersButton" class="secondary-btn" type="button">Reset filters</button>
+        </aside>
+
+        <div class="catalog-main">
+          <div class="catalog-intro">
+            <div>
+              <p class="section-kicker">Full catalog</p>
+              <h3>Browse all products</h3>
+            </div>
+            <p class="results-info">Search, compare, save favorites, and add to cart from one clean product grid.</p>
+          </div>
+          <div id="categoryChips" class="chips"></div>
+          <div class="toolbar">
+            <p id="resultsInfo" class="results-info"></p>
+            <p id="statusMessage" class="status-text"></p>
+          </div>
+          <section id="productGrid" class="product-grid"></section>
+        </div>
+      </section>
+    </main>
+
+    <dialog id="productModal" class="product-modal">
+      <button id="closeModalButton" class="modal-close" type="button" aria-label="Close">x</button>
+      <div class="modal-content">
+        <img id="modalImage" alt="" />
+        <div class="modal-copy">
+          <p id="modalCategory" class="section-kicker"></p>
+          <h3 id="modalName"></h3>
+          <p id="modalDescription"></p>
+          <div class="modal-meta">
+            <strong id="modalPrice"></strong>
+            <span id="modalRating"></span>
+          </div>
+          <p id="modalInventory" class="results-info"></p>
+          <div class="modal-actions">
+            <button id="modalCartButton" class="primary-btn" type="button">Add to cart</button>
+            <button id="modalWishlistButton" class="secondary-btn" type="button">Save to watchlist</button>
+          </div>
+        </div>
+      </div>
+    </dialog>
+
+    <template id="productTemplate">
+      <article class="product-card">
+        <div class="card-image-wrap">
+          <span class="badge"></span>
+          <button type="button" class="wishlist-btn" aria-label="Toggle watchlist">?</button>
+          <img alt="" loading="lazy" />
+        </div>
+        <div class="card-body">
+          <div class="card-topline">
+            <p class="category"></p>
+            <span class="inventory-pill"></span>
+          </div>
+          <h3></h3>
+          <p class="description"></p>
+          <div class="card-meta">
+            <span class="rating"></span>
+            <strong class="price"></strong>
+          </div>
+          <div class="card-actions">
+            <button type="button" class="secondary-btn quick-view-btn">Quick View</button>
+            <button type="button" class="add-btn">Add to Cart</button>
+          </div>
+        </div>
+      </article>
+    </template>
+
+    <script src="config.js"></script>
+    <script src="catalog.js"></script>
+    <script src="order.js"></script>
+  </body>
+</html>

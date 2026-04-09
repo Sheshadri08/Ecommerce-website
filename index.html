@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Redirecting to NovaCart</title>
+  </head>
+  <body>
+    <p>Redirecting to <a href="./frontend/index.html">NovaCart</a>...</p>
+    <script>
+      window.location.replace(`./frontend/index.html${window.location.search}${window.location.hash}`);
+    </script>
+  </body>
+</html>

@@ -1,0 +1,21 @@
+.admin-header {
+  z-index: 35;
+}
+
+.auth-panel {
+  margin-top: 24px;
+}
+
+.credential-note strong,
+.stock-list strong {
+  display: block;
+  margin-bottom: 4px;
+}
+
+.empty-order {
+  color: var(--muted);
+}
+
+.status-select {
+  min-width: 140px;
+}
