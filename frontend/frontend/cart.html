@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>NovaCart | Cart & Checkout</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Fraunces:wght@600;700&family=Manrope:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="brand-wrap">
+        <span class="brand-dot"></span>
+        <div>
+          <h1>NovaCart</h1>
+          <p class="header-subtitle">Cart and checkout</p>
+        </div>
+      </div>
+      <div class="search-wrap">
+        <input type="text" disabled value="Secure order summary" />
+      </div>
+      <div class="header-actions">
+        <a class="ghost-link" href="login.html">Login</a>
+        <a class="ghost-link" data-admin-link href="../admin/">Admin Panel</a>
+        <a class="ghost-link" href="track.html">Track Order</a>
+        <a class="cart-link" href="index.html">Continue Shopping</a>
+      </div>
+    </header>
+
+    <main class="cart-page">
+      <div class="page-heading">
+        <div>
+          <p class="section-kicker">Order review</p>
+          <h2>Your cart</h2>
+        </div>
+          <p class="results-info">Confirm quantities, choose payment, and lock today&apos;s order.</p>
+      </div>
+
+      <div class="cart-layout">
+        <section id="cartList" class="cart-list"></section>
+
+        <aside class="order-summary">
+          <h3>Checkout summary</h3>
+          <div class="summary-line"><span>Subtotal</span><span id="subtotal">INR 0</span></div>
+          <div class="summary-line"><span>Cold-chain delivery</span><span id="shipping">INR 0</span></div>
+          <div class="summary-line"><span>Handling tax</span><span id="tax">INR 0</span></div>
+          <div class="summary-line summary-total"><span>Total</span><span id="total">INR 0</span></div>
+
+          <form id="checkoutForm" class="checkout-form">
+            <input id="customerName" placeholder="Your name" required />
+            <input id="customerEmail" type="email" placeholder="Your email" required />
+            <input id="customerPhone" type="tel" placeholder="Phone number" required />
+            <textarea id="customerAddress" placeholder="Delivery address" rows="3" required></textarea>
+            <select id="paymentMethod" required>
+              <option value="">Select payment option</option>
+              <option value="cash_on_delivery">Cash on Delivery</option>
+              <option value="upi">UPI</option>
+              <option value="card">Debit / Credit Card</option>
+              <option value="net_banking">Net Banking</option>
+              <option value="wallet">Wallet</option>
+            </select>
+            <button id="checkoutButton" class="primary-btn" type="submit">Place Order</button>
+          </form>
+
+          <button id="clearCartBtn" class="secondary-btn" type="button">Clear Cart</button>
+          <p id="checkoutMessage" class="status-text"></p>
+        </aside>
+      </div>
+    </main>
+
+    <script src="config.js"></script>
+    <script src="catalog.js"></script>
+    <script src="cart.js"></script>
+  </body>
+</html>
