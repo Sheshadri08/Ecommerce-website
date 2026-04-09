@@ -197,8 +197,8 @@ function renderCategoryChips() {
 
 function inventoryLabel(product) {
   if (product.inventory <= 0) return "Sold out";
-  if (product.inventory <= 5) return `${product.inventory} trays left`;
-  return `${product.inventory} ready today`;
+  if (product.inventory <= 5) return `${product.inventory} left in stock`;
+  return `${product.inventory} available now`;
 }
 
 function createProductCard(product) {
@@ -215,7 +215,7 @@ function createProductCard(product) {
   clone.querySelector(".category").textContent = product.category;
   clone.querySelector("h3").textContent = product.name;
   clone.querySelector(".description").textContent = product.description;
-  clone.querySelector(".rating").textContent = `Freshness ${Number(product.rating).toFixed(1)}`;
+  clone.querySelector(".rating").textContent = `Rating ${Number(product.rating).toFixed(1)}`;
   clone.querySelector(".price").textContent = formatPrice(product.price);
 
   if (product.badge) {
@@ -335,7 +335,7 @@ function openProductModal(productId) {
   document.getElementById("modalName").textContent = product.name;
   document.getElementById("modalDescription").textContent = product.description;
   document.getElementById("modalPrice").textContent = formatPrice(product.price);
-  document.getElementById("modalRating").textContent = `Freshness ${Number(product.rating).toFixed(1)}`;
+  document.getElementById("modalRating").textContent = `Rating ${Number(product.rating).toFixed(1)}`;
   document.getElementById("modalInventory").textContent =
     product.inventory > 0 ? `${product.inventory} unit(s) available for dispatch today` : "Currently sold out";
   document.getElementById("modalCartButton").disabled = product.inventory <= 0;
@@ -389,7 +389,7 @@ async function loadInitialProducts() {
 }
 
 async function loadProducts() {
-  setStatusMessage("Loading fresh stock...");
+  setStatusMessage("Loading products...");
 
   try {
     const response = await fetch(apiUrl(`/api/products?${buildSearchParams().toString()}`));
@@ -453,7 +453,7 @@ function resetFilters() {
   renderCategoryChips();
   loadProducts().catch(() => {
     document.getElementById("resultsInfo").textContent = "Unable to load product listings.";
-    setStatusMessage("Could not refresh the stock board.", true);
+    setStatusMessage("Could not refresh the product catalog.", true);
   });
 }
 
@@ -462,7 +462,7 @@ function queueProductReload() {
   searchTimer = window.setTimeout(() => {
     loadProducts().catch(() => {
       document.getElementById("resultsInfo").textContent = "Unable to load product listings.";
-      setStatusMessage("Could not refresh the stock board.", true);
+      setStatusMessage("Could not refresh the product catalog.", true);
     });
   }, 180);
 }
@@ -534,7 +534,7 @@ async function init() {
     await loadProducts();
   } catch (error) {
     document.getElementById("resultsInfo").textContent = "Unable to load product listings.";
-    setStatusMessage("Stock board unavailable.", true);
+    setStatusMessage("Product catalog unavailable.", true);
   }
 }
 
